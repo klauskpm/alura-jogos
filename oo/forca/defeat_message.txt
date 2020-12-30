@@ -1,0 +1,18 @@
+Que droga, você foi enforcado.
+A palavra era {secret_word}
+    _______________         
+   /               \       
+  /                 \      
+//                   \/\  
+\|   XXXX     XXXX   | /   
+ |   XXXX     XXXX   |/     
+ |   XXX       XXX   |      
+ |                   |      
+ \__      XXX      __/     
+   |\     XXX     /|       
+   | |           | |        
+   | I I I I I I I |        
+   |  I I I I I I  |        
+   \_             _/       
+     \_         _/         
+       \_______/           

@@ -16,6 +16,14 @@ class Forca:
     def __init__(self):
         self._secret_word: str = ''
 
+        with open('defeat_message.txt', 'r') as defeat_file:
+            self.defeat_message = [line for line in defeat_file]
+            self.defeat_message = ''.join(self.defeat_message)
+
+        with open('victory_message.txt', 'r') as victory_file:
+            self.victory_message = [line for line in victory_file]
+            self.victory_message = ''.join(self.victory_message)
+
     def start_new_game(self):
         self.reset_states()
         self._print_opening_message()
@@ -31,6 +39,7 @@ class Forca:
 
     @secret_word.setter
     def secret_word(self, secret_word):
+        secret_word = normalize(secret_word)
         self.mapped_word_positions = map_positions(secret_word)
         self.hidden_word = [Forca.PLACEHOLDER_LETTER for _ in secret_word]
         self._secret_word = secret_word
@@ -43,10 +52,9 @@ class Forca:
         self.set_random_secret_word()
 
     def set_random_secret_word(self):
-        random_word = self.get_random_secret_word()
-        self.secret_word = normalize(random_word)
+        self.secret_word = self.get_random_secret_word()
 
-    def get_random_secret_word(self, file_path='words.txt'):
+    def get_random_secret_word(self, file_path='fruits.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
 
@@ -120,37 +128,11 @@ class Forca:
         sleep(2)
 
     def _print_victory_message(self):
-        print("Parabéns, você ganhou!")
-        print("       ___________      ")
-        print("      '._==_==_=_.'     ")
-        print("      .-\\:      /-.    ")
-        print("     | (|:.     |) |    ")
-        print("      '-|:.     |-'     ")
-        print("        \\::.    /      ")
-        print("         '::. .'        ")
-        print("           ) (          ")
-        print("         _.' '._        ")
-        print("        '-------'       ")
+        print(self.victory_message)
 
     def _print_defeat_message(self):
-        print('Que droga, você foi enforcado.')
-        print(f"A palavra era {self.secret_word}")
-        print("    _______________         ")
-        print("   /               \       ")
-        print("  /                 \      ")
-        print("//                   \/\  ")
-        print("\|   XXXX     XXXX   | /   ")
-        print(" |   XXXX     XXXX   |/     ")
-        print(" |   XXX       XXX   |      ")
-        print(" |                   |      ")
-        print(" \__      XXX      __/     ")
-        print("   |\     XXX     /|       ")
-        print("   | |           | |        ")
-        print("   | I I I I I I I |        ")
-        print("   |  I I I I I I  |        ")
-        print("   \_             _/       ")
-        print("     \_         _/         ")
-        print("       \_______/           ")
+        params = {'secret_word': self.secret_word}
+        print(self.defeat_message.format(**params))
 
     def _draw_gallows(self):
         print("  _______     ")
@@ -207,3 +189,6 @@ class Forca:
         print(" |            ")
         print("_|___         ")
         print()
+
+f = Forca()
+f.start_new_game()
