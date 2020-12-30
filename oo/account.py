@@ -1,18 +1,18 @@
 class Account:
     def __init__(self, number, holder_name, balance, limit=1000.0):
-        self.number = number
-        self.holder_name = holder_name
-        self.balance = balance
-        self.limit = limit
+        self.__number = number
+        self.__holder_name = holder_name
+        self.__balance = balance
+        self.__limit = limit
 
     def check_balance(self):
-        print(f"Saldo {self.balance} do titular {self.holder_name}")
+        print(f"Saldo {self.__balance} do titular {self.__holder_name}")
 
     def deposit(self, money):
         money = abs(money)
-        self.balance += money
+        self.__balance += money
 
     def withdraw(self, money):
         money = abs(money)
-        self.balance -= money
+        self.__balance -= money
         return money
