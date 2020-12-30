@@ -16,3 +16,7 @@ class Account:
         money = abs(money)
         self.__balance -= money
         return money
+
+    def transfer(self, money, target_account: 'Account'):
+        self.withdraw(money)
+        target_account.deposit(money)
