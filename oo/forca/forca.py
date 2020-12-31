@@ -4,18 +4,17 @@ from jogos.helpers import map_positions, normalize, sleep, clear
 
 
 class Forca:
-    __won: bool
-    __lost: bool
-    __tries: int
-    __guessed_letters: list
-    __mapped_word_positions: dict
-    __hidden_word: list
-
     __PLACEHOLDER_LETTER = '_'
 
     def __init__(self):
-        self.___secret_word: str = ''
-        self.__gallows_draw: list = []
+        self.__won = False
+        self.__lost = False
+        self.__tries = 7
+        self.__guessed_letters = []
+        self.__mapped_word_positions = {}
+        self.__hidden_word = []
+        self.___secret_word = ''
+        self.__gallows_draw = []
         with open('defeat_message.txt', 'r') as defeat_file:
             self.__defeat_message = [line for line in defeat_file]
             self.__defeat_message = ''.join(self.__defeat_message)
@@ -23,8 +22,6 @@ class Forca:
         with open('victory_message.txt', 'r') as victory_file:
             self.__victory_message = [line for line in victory_file]
             self.__victory_message = ''.join(self.__victory_message)
-
-
 
     def start_new_game(self):
         self.__reset_states()
