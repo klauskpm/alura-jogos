@@ -3,20 +3,20 @@ from abc import ABC
 
 class VideoABC(ABC):
     def __init__(self, title, year):
-        self.__title = title.title()
+        self._title = title.title()
         self.year = year
-        self.__likes = 0
+        self._likes = 0
 
     @property
     def title(self):
-        return self.__title
+        return self._title
 
     @property
     def likes(self):
-        return self.__likes
+        return self._likes
 
     def like(self):
-        self.__likes += 1
+        self._likes += 1
 
 
 class Movie(VideoABC):
@@ -31,9 +31,7 @@ class Series(VideoABC):
         self.seasons = seasons
 
 
-ving = Movie('vingadores: guerra infinita', 2018, 200)
+ving = Series('vingadores: guerra infinita', 2018, 200)
 ving.like()
 ving.like()
-print(ving.likes)
-ving.likes = 7
 print(ving.likes)
