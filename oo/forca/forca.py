@@ -13,7 +13,7 @@ class Forca:
         self.__guessed_letters = []
         self.__mapped_word_positions = {}
         self.__hidden_word = []
-        self.___secret_word = ''
+        self.__secret_word = ''
         self.__gallows_draw = []
         with open('defeat_message.txt', 'r') as defeat_file:
             self.__defeat_message = [line for line in defeat_file]
@@ -31,17 +31,6 @@ class Forca:
             self.__next_round()
 
         self.__end_game()
-
-    @property
-    def __secret_word(self):
-        return self.___secret_word
-
-    @__secret_word.setter
-    def __secret_word(self, secret_word):
-        secret_word = normalize(secret_word)
-        self.__mapped_word_positions = map_positions(secret_word)
-        self.__hidden_word = [Forca.__PLACEHOLDER_LETTER for _ in secret_word]
-        self.___secret_word = secret_word
 
     def __reset_states(self):
         self.__won = False
@@ -62,7 +51,9 @@ class Forca:
         self.__set_random_secret_word()
 
     def __set_random_secret_word(self):
-        self.__secret_word = self.__get_random_secret_word()
+        self.__secret_word = normalize(self.__get_random_secret_word())
+        self.__mapped_word_positions = map_positions(self.__secret_word)
+        self.__hidden_word = [Forca.__PLACEHOLDER_LETTER for _ in self.__secret_word]
 
     def __get_random_secret_word(self, file_path='fruits.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
