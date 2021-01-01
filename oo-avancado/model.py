@@ -46,9 +46,32 @@ class Series(VideoABC):
                f' | likes {self.likes}'
 
 
-ving = Movie('vingadores: guerra infinita', 2018, 200)
-ving.like()
-ving.like()
-print(ving.likes)
+class Playlist:
+    def __init__(self, nome, videos_list):
+        self.nome = nome
+        self.videos_list = videos_list
 
-print(ving)
+    def __iter__(self):
+        return iter(self.videos_list)
+
+    def size(self):
+        return len(self.videos_list)
+
+
+ving = Movie('vingadores: guerra infinita', 2018, 200)
+tmoc = Series('todo mundo odeia o chris', 2000, 8)
+jujutsu = Series('jujutsu no kaisen', 2000, 8)
+
+ving.like()
+ving.like()
+
+tmoc.like()
+tmoc.like()
+tmoc.like()
+tmoc.like()
+
+weekend_playlist = Playlist('Weekend', [ving, tmoc, jujutsu])
+sorted_playlist = sorted(weekend_playlist, key=lambda video: video.likes, reverse=True)
+
+for video in sorted_playlist:
+    print(f"Video info {video}")
