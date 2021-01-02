@@ -47,20 +47,19 @@ class Series(VideoABC):
 
 
 class Playlist:
-    def __init__(self, nome, videos_list):
+    def __init__(self, nome, videos_list: list):
         self.nome = nome
         self._videos_list = videos_list
 
-    def __getitem__(self, item):
-        return self._videos_list[item]
+    def __iter__(self):
+        return self._videos_list.__iter__()
+
+    def __len__(self):
+        return len(self._videos_list)
 
     @property
     def list(self):
         return self._videos_list
-
-    @property
-    def size(self):
-        return len(self._videos_list)
 
 
 ving = Movie('vingadores: guerra infinita', 2018, 200)
@@ -75,7 +74,8 @@ tmoc.like()
 tmoc.like()
 tmoc.like()
 
-weekend_playlist = PlayList2('Weekend', [ving, tmoc, jujutsu])
+weekend_playlist = Playlist('Weekend', [ving, tmoc, jujutsu])
+len(weekend_playlist)
 sorted_playlist = sorted(weekend_playlist, key=lambda video: video.likes, reverse=True)
 
 for video in weekend_playlist:
