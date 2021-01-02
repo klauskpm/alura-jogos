@@ -51,8 +51,8 @@ class Playlist:
         self.nome = nome
         self._videos_list = videos_list
 
-    def __iter__(self):
-        return iter(self._videos_list)
+    def __getitem__(self, item):
+        return self._videos_list[item]
 
     @property
     def list(self):
@@ -75,8 +75,8 @@ tmoc.like()
 tmoc.like()
 tmoc.like()
 
-weekend_playlist = Playlist('Weekend', [ving, tmoc, jujutsu])
+weekend_playlist = PlayList2('Weekend', [ving, tmoc, jujutsu])
 sorted_playlist = sorted(weekend_playlist, key=lambda video: video.likes, reverse=True)
 
-for video in sorted_playlist:
+for video in weekend_playlist:
     print(f"Video info {video}")
