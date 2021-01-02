@@ -1,12 +1,13 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
-class VideoABC(ABC):
+class Video(ABC):
     def __init__(self, title, year):
         self._title = title.title()
         self.year = year
         self._likes = 0
 
+    @abstractmethod
     def __str__(self):
         return f'Título {self.title} - Ano {self.year} | likes {self.likes}'
 
@@ -22,7 +23,7 @@ class VideoABC(ABC):
         self._likes += 1
 
 
-class Movie(VideoABC):
+class Movie(Video):
     def __init__(self, title, year, duration):
         super().__init__(title, year)
         self.duration = duration
@@ -34,7 +35,7 @@ class Movie(VideoABC):
                f' | likes {self.likes}'
 
 
-class Series(VideoABC):
+class Series(Video):
     def __init__(self, title, year, seasons):
         super().__init__(title, year)
         self.seasons = seasons
