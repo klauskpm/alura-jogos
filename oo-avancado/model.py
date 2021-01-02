@@ -46,10 +46,21 @@ class Series(VideoABC):
                f' | likes {self.likes}'
 
 
-class Playlist(list):
+class Playlist:
     def __init__(self, nome, videos_list):
-        super().__init__(videos_list)
         self.nome = nome
+        self._videos_list = videos_list
+
+    def __iter__(self):
+        return iter(self._videos_list)
+
+    @property
+    def list(self):
+        return self._videos_list
+
+    @property
+    def size(self):
+        return len(self._videos_list)
 
 
 ving = Movie('vingadores: guerra infinita', 2018, 200)
