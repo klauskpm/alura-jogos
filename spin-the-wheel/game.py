@@ -28,19 +28,36 @@ class Game:
         )
         won = Round(secret_world, players).run()
 
-        self.__end_game(won, secret_world)
+        self.__end_game(won, secret_world, players)
 
-    def __end_game(self, won, secret_word):
+    def __end_game(self, won, secret_word, players):
         clear()
         if (won):
-            self.__print_victory_message()
+            self.__print_victory_message(players)
         else:
-            self.__print_defeat_message(secret_word)
+            self.__print_defeat_message(secret_word, players)
 
-    def __print_victory_message(self):
+    def _print_top_five_ranking(self, players):
+        players_count = len(players)
+        if (players_count <= 1):
+            return
+
+        ranked_players = sorted(players, key=lambda player: player.money, reverse=True)
+        max_rank = min(players_count, 5)
+        for i in range(max_rank):
+            rank = i + 1
+            player = ranked_players[i]
+            print(f"#{rank} - {player.name} com R${player.money:.2f}")
+
+        print()
+        print()
+
+    def __print_victory_message(self, players):
+        self._print_top_five_ranking(players)
         print(self.__victory_message)
 
-    def __print_defeat_message(self, secret_word):
+    def __print_defeat_message(self, secret_word, players):
+        self._print_top_five_ranking(players)
         params = {'secret_word': secret_word}
         print(self.__defeat_message.format(**params))
 
