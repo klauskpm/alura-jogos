@@ -21,7 +21,11 @@ class Game:
         self.__print_opening_message()
 
         secret_world = self.__get_random_secret_word()
-        players = []
+        players = (
+            Player('Klaus'),
+            Player('Michelle'),
+            Player('Marcia')
+        )
         won = Round(secret_world, players).run()
 
         self.__end_game(won, secret_world)
