@@ -6,6 +6,7 @@ from helpers import clear, sleep, normalize, map_positions
 
 class Round:
     __PLACEHOLDER_LETTER = '_'
+    __LETTER_VALUE = 100
 
     def __init__(self, word: str, players: Tuple[Player, ...] = None):
         if players is None:
@@ -76,7 +77,10 @@ class Round:
         if (guess in self.__mapped_word_positions):
             indexes = self.__mapped_word_positions[guess]
             letter_count = len(indexes)
+            earned_money = Round.__LETTER_VALUE * letter_count
             print(f"Tem {letter_count} letras '{guess}'")
+            print(f"Você ganhou R${earned_money:.2f}")
+            self._current_player.add_money(earned_money)
 
             for i in indexes:
                 self.__hidden_word[i] = guess
@@ -89,7 +93,7 @@ class Round:
     def __print_round_start_message(self):
         clear()
         print(f"Rodada de {self._current_player.name}")
-        print(f"Dinheiro: {self._current_player.money}")
+        print(f"(R${self._current_player.money:.2f})")
         print()
         print('A palavra secreta é:')
         print(' '.join(self.__hidden_word))
