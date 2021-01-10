@@ -17,8 +17,8 @@ class Round:
         self._current_player = self._players[0]
         self._money_for_letter = 100
 
-        self.__won = False
-        self.__lost = False
+        self.__guessed_word = False
+        self.__was_hanged = False
         self.__tries = 7
         self.__hidden_word = []
         self.__guessed_letters = []
@@ -53,11 +53,11 @@ class Round:
 
         self.__check_guess(guess)
 
-        self.__won = Round.__PLACEHOLDER_LETTER not in self.__hidden_word
-        self.__lost = self.__tries <= 0
+        self.__guessed_word = Round.__PLACEHOLDER_LETTER not in self.__hidden_word
+        self.__was_hanged = self.__tries <= 0
 
-        if (self.__won or self.__lost):
-            return self.__won
+        if (self.__guessed_word or self.__was_hanged):
+            return self.__guessed_word
         else:
             return self._next_turn()
 
