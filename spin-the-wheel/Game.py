@@ -10,17 +10,17 @@ class Game:
 
     def __init__(self):
         with open('drawings/defeat_message.txt', 'r') as defeat_file:
-            self.__defeat_message = [line for line in defeat_file]
-            self.__defeat_message = ''.join(self.__defeat_message)
+            self._defeat_message = [line for line in defeat_file]
+            self._defeat_message = ''.join(self._defeat_message)
 
         with open('drawings/victory_message.txt', 'r') as victory_file:
-            self.__victory_message = [line for line in victory_file]
-            self.__victory_message = ''.join(self.__victory_message)
+            self._victory_message = [line for line in victory_file]
+            self._victory_message = ''.join(self._victory_message)
 
     def start(self):
-        self.__print_opening_message()
+        self._print_opening_message()
 
-        secret_world = self.__get_random_secret_word()
+        secret_world = self._get_random_secret_word()
         players = (
             Player('Klaus'),
             Player('Michelle'),
@@ -28,14 +28,14 @@ class Game:
         )
         won = Round(secret_world, players).run()
 
-        self.__end_game(won, secret_world, players)
+        self._end_game(won, secret_world, players)
 
-    def __end_game(self, won, secret_word, players):
+    def _end_game(self, won, secret_word, players):
         clear()
         if (won):
-            self.__print_victory_message(players)
+            self._print_victory_message(players)
         else:
-            self.__print_defeat_message(secret_word, players)
+            self._print_defeat_message(secret_word, players)
 
     def _print_top_five_ranking(self, players):
         players_count = len(players)
@@ -52,22 +52,22 @@ class Game:
         print()
         print()
 
-    def __print_victory_message(self, players):
+    def _print_victory_message(self, players):
         self._print_top_five_ranking(players)
-        print(self.__victory_message)
+        print(self._victory_message)
 
-    def __print_defeat_message(self, secret_word, players):
+    def _print_defeat_message(self, secret_word, players):
         self._print_top_five_ranking(players)
         params = {'secret_word': secret_word}
-        print(self.__defeat_message.format(**params))
+        print(self._defeat_message.format(**params))
 
-    def __get_random_secret_word(self, file_path='words/fruits.txt'):
+    def _get_random_secret_word(self, file_path='words/fruits.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
 
         return words[randint(0, len(words) - 1)]
 
-    def __print_opening_message(self):
+    def _print_opening_message(self):
         clear()
         print('***************************')
         print("Bem vindo ao jogo da Forca!")
