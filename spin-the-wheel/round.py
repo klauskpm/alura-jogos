@@ -1,7 +1,8 @@
 from typing import Tuple
 
 from player import Player
-from helpers import clear, sleep, normalize, map_positions
+from SecretWord import SecretWord
+from helpers import clear, sleep, normalize
 
 
 class Round:
@@ -20,9 +21,7 @@ class Round:
         self.__guessed_word = False
         self.__was_hanged = False
         self.__tries = 7
-        self.__hidden_word = []
         self.__guessed_letters = []
-        self.__mapped_word_positions = {}
         self.__gallows_draw = [
             "  _______     ",
             " |/      |    ",
@@ -34,12 +33,7 @@ class Round:
             "_|___         ",
             ""
         ]
-        self.__set_random_secret_word(word)
-
-    def __set_random_secret_word(self, word):
-        self.__secret_word = normalize(word)
-        self.__mapped_word_positions = map_positions(self.__secret_word)
-        self.__hidden_word = [Round.__PLACEHOLDER_LETTER for _ in self.__secret_word]
+        self._secret_word = SecretWord(word)
 
     def run(self):
         return self._run_turn()
@@ -53,7 +47,7 @@ class Round:
 
         self.__check_guess(guess)
 
-        self.__guessed_word = Round.__PLACEHOLDER_LETTER not in self.__hidden_word
+        self.__guessed_word = self._secret_word.has_guessed_word()
         self.__was_hanged = self.__tries <= 0
 
         if (self.__guessed_word or self.__was_hanged):
@@ -74,16 +68,13 @@ class Round:
         self._current_player = self._players[next_player_index]
 
     def __check_guess(self, guess):
-        if (guess in self.__mapped_word_positions):
-            indexes = self.__mapped_word_positions[guess]
-            letter_count = len(indexes)
+        letter_count = self._secret_word.get_letter_count(guess)
+        if letter_count > 0:
+            self._secret_word.guess_letter(guess)
             earned_money = Round.__LETTER_VALUE * letter_count
             print(f"Tem {letter_count} letras '{guess}'")
             print(f"Você ganhou R${earned_money:.2f}")
             self._current_player.add_money(earned_money)
-
-            for i in indexes:
-                self.__hidden_word[i] = guess
         else:
             print("Não foi dessa vez.")
             self.__tries -= 1
@@ -96,7 +87,7 @@ class Round:
         print(f"(R${self._current_player.money:.2f})")
         print()
         print('A palavra secreta é:')
-        print(' '.join(self.__hidden_word))
+        print(' '.join(self._secret_word.get_hidden_word()))
         print()
         print(f"Você tem {self.__tries} tentativas.")
         print()
