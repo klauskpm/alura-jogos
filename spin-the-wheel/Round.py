@@ -40,9 +40,9 @@ class Round:
 
     def _run_turn(self):
         self.__print_round_start_message()
-        guess, guessed_before = self.__input_guess()
+        guess = self.__input_guess()
 
-        if (guessed_before):
+        if self._has_guessed_before(guess):
             return self._run_turn()
 
         self.__check_guess(guess)
@@ -97,6 +97,10 @@ class Round:
     def __input_guess(self):
         guess = input("Chute uma letra: ")
         guess = normalize(guess)
+
+        return guess
+
+    def _has_guessed_before(self, guess):
         guessed_before = guess in self.__guessed_letters
 
         if (not guessed_before):
@@ -107,7 +111,7 @@ class Round:
             print(f"A letra '{guess}' já foi chutada anteriormente")
             sleep(2)
 
-        return guess, guessed_before
+        return guessed_before
 
     def __draw_gallows(self):
         head_position = 2
