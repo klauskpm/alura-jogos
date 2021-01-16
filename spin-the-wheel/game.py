@@ -61,7 +61,7 @@ class Game:
         params = {'secret_word': secret_word}
         print(self.__defeat_message.format(**params))
 
-    def __get_random_secret_word(self, file_path='fruits.txt'):
+    def __get_random_secret_word(self, file_path='./words/fruits.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
 
