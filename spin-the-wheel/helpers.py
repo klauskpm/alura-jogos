@@ -1,5 +1,6 @@
 import os
 import time
+from collections import defaultdict
 from sys import argv
 
 DEBUG_MODE = 'debug' in argv[1:]
@@ -32,12 +33,10 @@ def find_all(word, letter):
 
 
 def map_positions(word):
-    positions_dict = {}
+    positions_dict = defaultdict(list)
 
     for i in range(len(word)):
         letter = word[i]
-        if (letter not in positions_dict):
-            positions_dict[letter] = []
         positions_dict[letter].append(i)
 
     return positions_dict
