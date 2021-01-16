@@ -1,8 +1,8 @@
 from random import randint
 from time import sleep
 
-from player import Player
-from round import Round
+from Player import Player
+from Round import Round
 from helpers import sleep, clear
 
 
