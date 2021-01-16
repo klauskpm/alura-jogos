@@ -6,7 +6,6 @@ from helpers import clear, sleep, normalize
 
 
 class Round:
-    __PLACEHOLDER_LETTER = '_'
     __LETTER_VALUE = 100
 
     def __init__(self, word: str, players: Tuple[Player, ...] = None):
