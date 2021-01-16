@@ -9,11 +9,11 @@ from helpers import sleep, clear
 class Game:
 
     def __init__(self):
-        with open('defeat_message.txt', 'r') as defeat_file:
+        with open('drawings/defeat_message.txt', 'r') as defeat_file:
             self.__defeat_message = [line for line in defeat_file]
             self.__defeat_message = ''.join(self.__defeat_message)
 
-        with open('victory_message.txt', 'r') as victory_file:
+        with open('drawings/victory_message.txt', 'r') as victory_file:
             self.__victory_message = [line for line in victory_file]
             self.__victory_message = ''.join(self.__victory_message)
 
@@ -61,7 +61,7 @@ class Game:
         params = {'secret_word': secret_word}
         print(self.__defeat_message.format(**params))
 
-    def __get_random_secret_word(self, file_path='./words/fruits.txt'):
+    def __get_random_secret_word(self, file_path='words/fruits.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
 
