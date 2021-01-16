@@ -16,7 +16,6 @@ class Round:
         self._players_count = len(self._players)
         self._current_player_index = 0
         self._current_player = self._players[0]
-        self._money_for_letter = 100
 
         self.__guessed_word = False
         self.__was_hanged = False
