@@ -8,6 +8,7 @@ class SecretWord:
         self._secret_word = normalize(word)
         self._hidden_word = [SecretWord.__PLACEHOLDER_LETTER for _ in self._secret_word]
         self._letter_positions_dict = map_positions(self._secret_word)
+        self.was_guessed = False
 
     def get_word(self):
         return self._secret_word
@@ -23,6 +24,8 @@ class SecretWord:
         for i in indexes:
             self._hidden_word[i] = letter
 
+        self.was_guessed = SecretWord.__PLACEHOLDER_LETTER not in self._hidden_word
+
     def has_letter(self, letter):
         return letter in self._letter_positions_dict
 
@@ -32,7 +35,4 @@ class SecretWord:
 
         indexes = self._letter_positions_dict[letter]
         return len(indexes)
-
-    def has_guessed_word(self):
-        return SecretWord.__PLACEHOLDER_LETTER not in self._hidden_word
 

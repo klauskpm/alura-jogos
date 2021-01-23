@@ -35,10 +35,8 @@ class Round:
 
         self._check_guess(guess)
 
-        self._guessed_word = self._secret_word.has_guessed_word()
-
-        if self._guessed_word:
-            return self._guessed_word
+        if self._secret_word.was_guessed:
+            return
         else:
             return self._next_turn()
 
