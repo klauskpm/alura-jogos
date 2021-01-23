@@ -8,17 +8,25 @@ from helpers import clear, sleep, normalize
 
 class Round:
     def __init__(self, word: str, players: Tuple[Player, ...] = None):
+        self._set_players(players)
+        self._set_wheel()
+        self._set_secret_word(word)
+
+    def _set_players(self, players):
         if players is None:
             players = tuple([Player("Player")])
         self._players = players
         self._players_count = len(self._players)
         self._current_player_index = 0
         self._current_player = self._players[0]
+
+    def _set_wheel(self):
         self._wheel = Wheel([100, 200, 300, 400, 500])
         self._letter_value = 0
 
-        self._guessed_letters = []
+    def _set_secret_word(self, word):
         self._secret_word = SecretWord(word)
+        self._guessed_letters = []
 
     def run(self):
         return self._run_turn()
