@@ -19,19 +19,7 @@ class Round:
 
         self._guessed_word = False
         self._was_hanged = False
-        self._tries = 7
         self._guessed_letters = []
-        self._gallows_draw = [
-            "  _______     ",
-            " |/      |    ",
-            " |            ",
-            " |            ",
-            " |            ",
-            " |            ",
-            " |            ",
-            "_|___         ",
-            ""
-        ]
         self._secret_word = SecretWord(word)
 
     def run(self):
@@ -48,9 +36,8 @@ class Round:
         self._check_guess(guess)
 
         self._guessed_word = self._secret_word.has_guessed_word()
-        self._was_hanged = self._tries <= 0
 
-        if (self._guessed_word or self._was_hanged):
+        if self._guessed_word:
             return self._guessed_word
         else:
             return self._next_turn()
@@ -77,7 +64,6 @@ class Round:
             self._current_player.add_money(earned_money)
         else:
             print("Não foi dessa vez.")
-            self._tries -= 1
 
         sleep(2)
 
@@ -88,10 +74,6 @@ class Round:
         print()
         print('A palavra secreta é:')
         print(' '.join(self._secret_word.get_hidden_word()))
-        print()
-        print(f"Você tem {self._tries} tentativas.")
-        print()
-        self._draw_gallows()
         print()
 
     def _input_guess(self):
@@ -112,35 +94,6 @@ class Round:
             sleep(2)
 
         return guessed_before
-
-    def _draw_gallows(self):
-        head_position = 2
-        body_position = 3
-        lower_body_position = 4
-        legs_position = 5
-
-        if (self._tries == 6):
-            self._gallows_draw[head_position] = " |      (_)   "
-
-        if (self._tries == 5):
-            self._gallows_draw[body_position] = " |      \     "
-
-        if (self._tries == 4):
-            self._gallows_draw[body_position] = " |      \|    "
-
-        if (self._tries == 3):
-            self._gallows_draw[body_position] = " |      \|/   "
-
-        if (self._tries == 2):
-            self._gallows_draw[lower_body_position] = " |       |    "
-
-        if (self._tries == 1):
-            self._gallows_draw[legs_position] = " |      /     "
-
-        if (self._tries == 0):
-            self._gallows_draw[legs_position] = " |      / \   "
-
-        print('\n'.join(self._gallows_draw))
 
     def _spin_the_wheel(self):
         self._letter_value = self._wheel.spin()
