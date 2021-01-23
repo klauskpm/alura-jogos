@@ -9,10 +9,6 @@ from helpers import sleep, clear
 class Game:
 
     def __init__(self):
-        with open('drawings/defeat_message.txt', 'r') as defeat_file:
-            self._defeat_message = [line for line in defeat_file]
-            self._defeat_message = ''.join(self._defeat_message)
-
         with open('drawings/victory_message.txt', 'r') as victory_file:
             self._victory_message = [line for line in victory_file]
             self._victory_message = ''.join(self._victory_message)
@@ -26,16 +22,13 @@ class Game:
             Player('Michelle'),
             Player('Marcia')
         )
-        won = Round(secret_world, players).run()
+        Round(secret_world, players).run()
 
-        self._end_game(won, secret_world, players)
+        self._end_game(players)
 
-    def _end_game(self, won, secret_word, players):
+    def _end_game(self, players):
         clear()
-        if (won):
-            self._print_victory_message(players)
-        else:
-            self._print_defeat_message(secret_word, players)
+        self._print_victory_message(players)
 
     def _print_top_five_ranking(self, players):
         players_count = len(players)
@@ -55,11 +48,6 @@ class Game:
     def _print_victory_message(self, players):
         self._print_top_five_ranking(players)
         print(self._victory_message)
-
-    def _print_defeat_message(self, secret_word, players):
-        self._print_top_five_ranking(players)
-        params = {'secret_word': secret_word}
-        print(self._defeat_message.format(**params))
 
     def _get_random_secret_word(self, file_path='words/fruits.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
