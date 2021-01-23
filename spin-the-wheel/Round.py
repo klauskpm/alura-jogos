@@ -22,7 +22,7 @@ class Round:
 
     def _set_wheel(self):
         self._wheel = Wheel([100, 200, 300, 400, 500])
-        self._letter_value = 0
+        self._spin_the_wheel()
 
     def _set_secret_word(self, word):
         self._secret_word = SecretWord(word)
@@ -32,22 +32,13 @@ class Round:
         return self._run_turn()
 
     def _run_turn(self):
-        self._spin_the_wheel()
         self._print_round_start_message()
-        guess = self._input_guess()
-
-        if self._has_guessed_before(guess):
-            return self._run_turn()
-
-        self._check_guess(guess)
-
-        if self._secret_word.was_guessed:
-            return
-        else:
-            return self._next_turn()
+        has_guessed_letter = self._do_guess()
+        self._check_round(has_guessed_letter)
 
     def _next_turn(self):
         self._select_next_player()
+        self._spin_the_wheel()
         return self._run_turn()
 
     def _select_next_player(self):
@@ -58,19 +49,6 @@ class Round:
         self._current_player_index = next_player_index
         self._current_player = self._players[next_player_index]
 
-    def _check_guess(self, guess):
-        letter_count = self._secret_word.get_letter_count(guess)
-        if letter_count > 0:
-            self._secret_word.guess_letter(guess)
-            earned_money = self._letter_value * letter_count
-            print(f"Tem {letter_count} letras '{guess}'")
-            print(f"Você ganhou R${earned_money:.2f}")
-            self._current_player.add_money(earned_money)
-        else:
-            print("Não foi dessa vez.")
-
-        sleep(2)
-
     def _print_round_start_message(self):
         clear()
         print(f"{self._current_player.name} | R${self._current_player.money:.2f}")
@@ -80,11 +58,14 @@ class Round:
         print(' '.join(self._secret_word.get_hidden_word()))
         print()
 
-    def _input_guess(self):
+    def _do_guess(self):
         guess = input("Chute uma letra: ")
         guess = normalize(guess)
 
-        return guess
+        if self._has_guessed_before(guess):
+            return self._run_turn()
+
+        return self._check_guess(guess)
 
     def _has_guessed_before(self, guess):
         guessed_before = guess in self._guessed_letters
@@ -98,6 +79,37 @@ class Round:
             sleep(2)
 
         return guessed_before
+
+    def _check_guess(self, guess):
+        letter_count = self._secret_word.get_letter_count(guess)
+        if letter_count > 0:
+            self._secret_word.guess_letter(guess)
+            earned_money = self._letter_value * letter_count
+            print(f"Tem {letter_count} letras '{guess}'")
+            sleep(0.5)
+            print(f"Você ganhou R${earned_money:.2f}")
+            sleep(0.5)
+            self._current_player.add_money(earned_money)
+            sleep(0.5)
+            print("Continue jogando")
+            sleep(2)
+            return True
+        else:
+            print("Não foi dessa vez.")
+            sleep(2)
+            return False
+
+    def _check_round(self, has_guessed_letter):
+        if has_guessed_letter and self._secret_word.was_guessed:
+            return True
+        elif has_guessed_letter:
+            return self._continue_turn()
+        else:
+            return self._next_turn()
+
+    def _continue_turn(self):
+        self._spin_the_wheel()
+        return self._run_turn()
 
     def _spin_the_wheel(self):
         self._letter_value = self._wheel.spin()
