@@ -36,19 +36,6 @@ class Round:
         has_guessed_letter = self._do_guess()
         self._check_round(has_guessed_letter)
 
-    def _next_turn(self):
-        self._select_next_player()
-        self._spin_the_wheel()
-        return self._run_turn()
-
-    def _select_next_player(self):
-        next_player_index = self._current_player_index + 1
-        if (next_player_index >= self._players_count):
-            next_player_index = 0
-
-        self._current_player_index = next_player_index
-        self._current_player = self._players[next_player_index]
-
     def _print_round_start_message(self):
         clear()
         print(f"{self._current_player.name} | R${self._current_player.money:.2f}")
@@ -110,6 +97,19 @@ class Round:
     def _continue_turn(self):
         self._spin_the_wheel()
         return self._run_turn()
+
+    def _next_turn(self):
+        self._select_next_player()
+        self._spin_the_wheel()
+        return self._run_turn()
+
+    def _select_next_player(self):
+        next_player_index = self._current_player_index + 1
+        if (next_player_index >= self._players_count):
+            next_player_index = 0
+
+        self._current_player_index = next_player_index
+        self._current_player = self._players[next_player_index]
 
     def _spin_the_wheel(self):
         self._letter_value = self._wheel.spin()
