@@ -1,8 +1,10 @@
 from random import randrange, randint
 from decimal import Decimal
 
+
 def to_decimal(value):
     return Decimal(str(value))
+
 
 class Wheel:
     _STRENGTH_RANGES = {
@@ -34,4 +36,4 @@ class Wheel:
         rand_placement = randint(min_placement, max_placement)
 
         final_placement = int(to_decimal(rand_placement) * to_decimal(precision))
-        return final_placement % 4
+        return final_placement % (len(self._options) - 1)
