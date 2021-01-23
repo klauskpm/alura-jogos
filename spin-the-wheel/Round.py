@@ -2,12 +2,11 @@ from typing import Tuple
 
 from Player import Player
 from SecretWord import SecretWord
+from Wheel import Wheel
 from helpers import clear, sleep, normalize
 
 
 class Round:
-    _LETTER_VALUE = 100
-
     def __init__(self, word: str, players: Tuple[Player, ...] = None):
         if players is None:
             players = tuple([Player("Player")])
@@ -15,6 +14,8 @@ class Round:
         self._players_count = len(self._players)
         self._current_player_index = 0
         self._current_player = self._players[0]
+        self._wheel = Wheel([100, 200, 300, 400, 500])
+        self._letter_value = 0
 
         self._guessed_word = False
         self._was_hanged = False
@@ -37,6 +38,7 @@ class Round:
         return self._run_turn()
 
     def _run_turn(self):
+        self._spin_the_wheel()
         self._print_round_start_message()
         guess = self._input_guess()
 
@@ -69,7 +71,7 @@ class Round:
         letter_count = self._secret_word.get_letter_count(guess)
         if letter_count > 0:
             self._secret_word.guess_letter(guess)
-            earned_money = Round._LETTER_VALUE * letter_count
+            earned_money = self._letter_value * letter_count
             print(f"Tem {letter_count} letras '{guess}'")
             print(f"Você ganhou R${earned_money:.2f}")
             self._current_player.add_money(earned_money)
@@ -81,8 +83,8 @@ class Round:
 
     def _print_round_start_message(self):
         clear()
-        print(f"Rodada de {self._current_player.name}")
-        print(f"(R${self._current_player.money:.2f})")
+        print(f"{self._current_player.name} | R${self._current_player.money:.2f}")
+        print(f"Nessa rodada cada letra vale R${self._letter_value:.2f}")
         print()
         print('A palavra secreta é:')
         print(' '.join(self._secret_word.get_hidden_word()))
@@ -139,3 +141,6 @@ class Round:
             self._gallows_draw[legs_position] = " |      / \   "
 
         print('\n'.join(self._gallows_draw))
+
+    def _spin_the_wheel(self):
+        self._letter_value = self._wheel.spin()
