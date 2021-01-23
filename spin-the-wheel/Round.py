@@ -17,8 +17,6 @@ class Round:
         self._wheel = Wheel([100, 200, 300, 400, 500])
         self._letter_value = 0
 
-        self._guessed_word = False
-        self._was_hanged = False
         self._guessed_letters = []
         self._secret_word = SecretWord(word)
 
