@@ -22,7 +22,7 @@ class Round:
 
     def _set_wheel(self):
         self._wheel = Wheel([100, 200, 300, 400, 500])
-        self._spin_the_wheel()
+        self._letter_value = 0
 
     def _set_secret_word(self, word):
         self._secret_word = SecretWord(word)
@@ -32,17 +32,27 @@ class Round:
         return self._run_turn()
 
     def _run_turn(self):
-        self._print_round_start_message()
+        self._print_turn_start_message()
+        self._spin_the_wheel()
+        sleep(0.6)
+        self._print_turn_start_message()
+        self._print_letter_value_message()
         has_guessed_letter = self._do_guess()
         self._check_round(has_guessed_letter)
 
-    def _print_round_start_message(self):
+    def _print_turn_start_message(self):
         clear()
-        print(f"{self._current_player.name} | R${self._current_player.money:.2f}")
-        print(f"Nessa rodada cada letra vale R${self._letter_value:.2f}")
-        print()
         print('A palavra secreta é:')
         print(' '.join(self._secret_word.get_hidden_word()))
+        print()
+        print(f"Turno: {self._current_player.name} | R${self._current_player.money:.2f}")
+        print()
+
+    def _spin_the_wheel(self):
+        self._letter_value = self._wheel.spin()
+
+    def _print_letter_value_message(self):
+        print(f"Nessa rodada cada letra vale R${self._letter_value:.2f}")
         print()
 
     def _do_guess(self):
@@ -95,12 +105,10 @@ class Round:
             return self._next_turn()
 
     def _continue_turn(self):
-        self._spin_the_wheel()
         return self._run_turn()
 
     def _next_turn(self):
         self._select_next_player()
-        self._spin_the_wheel()
         return self._run_turn()
 
     def _select_next_player(self):
@@ -110,6 +118,3 @@ class Round:
 
         self._current_player_index = next_player_index
         self._current_player = self._players[next_player_index]
-
-    def _spin_the_wheel(self):
-        self._letter_value = self._wheel.spin()
