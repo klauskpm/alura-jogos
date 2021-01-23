@@ -49,7 +49,14 @@ class Round:
         print()
 
     def _spin_the_wheel(self):
-        self._letter_value = self._wheel.spin()
+        print(
+            'Com que força (número) você quer jogar?\n'
+            '1 - Fraco\n'
+            '2 - Médio\n'
+            '3 - Forte'
+        )
+        strength = int(input(''))
+        self._letter_value = self._wheel.spin(strength)
 
     def _print_letter_value_message(self):
         print(f"Nessa rodada cada letra vale R${self._letter_value:.2f}")
