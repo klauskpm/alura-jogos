@@ -1,3 +1,6 @@
+import sys
+
+
 class Usuario:
 
     def __init__(self, nome):
@@ -24,3 +27,13 @@ class Leilao:
     @property
     def lances(self):
         return self.__lances
+
+class Avaliador:
+    def __init__(self):
+        self.maior_lance = sys.float_info.min
+        self.menor_lance = sys.float_info.max
+
+    def avalia(self, leilao: Leilao):
+        lances = [lance.valor for lance in leilao.lances]
+        self.menor_lance = min(lances)
+        self.maior_lance = max(lances)
