@@ -28,6 +28,7 @@ class Leilao:
     def lances(self):
         return self.__lances
 
+
 class Avaliador:
     def __init__(self):
         self.maior_lance = sys.float_info.min
