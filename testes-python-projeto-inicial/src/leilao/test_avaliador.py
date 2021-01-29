@@ -3,80 +3,56 @@ from dominio import Usuario, Lance, Leilao, Avaliador
 
 
 class TestAvaliador(TestCase):
+    def setUp(self) -> None:
+        self.gui = Usuario('Gui')
+        self.yuri = Usuario('Yuri')
+        self.menor_valor_esperado = 100.0
+        self.maior_valor_esperado = 150.0
+
+        self.lance_do_yuri = Lance(self.yuri, self.menor_valor_esperado)
+        self.lance_do_gui = Lance(self.gui, self.maior_valor_esperado)
+
+        self.leilao = Leilao('Celular')
+
+
     def test_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_crescente(self):
-        gui = Usuario('Gui')
-        yuri = Usuario('Yuri')
-        menor_valor_esperado = 100.0
-        maior_valor_esperado = 150.0
-
-        lance_do_yuri = Lance(yuri, menor_valor_esperado)
-        lance_do_gui = Lance(gui, maior_valor_esperado)
-
-        leilao = Leilao('Celular')
-
-        leilao.lances.append(lance_do_gui)
-        leilao.lances.append(lance_do_yuri)
+        self.leilao.lances.append(self.lance_do_gui)
+        self.leilao.lances.append(self.lance_do_yuri)
 
         avaliador = Avaliador()
-        avaliador.avalia(leilao)
+        avaliador.avalia(self.leilao)
 
-        self.assertEqual(menor_valor_esperado, avaliador.menor_lance)
-        self.assertEqual(maior_valor_esperado, avaliador.maior_lance)
+        self.assertEqual(self.menor_valor_esperado, avaliador.menor_lance)
+        self.assertEqual(self.maior_valor_esperado, avaliador.maior_lance)
 
     def test_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_decrescente(self):
-        gui = Usuario('Gui')
-        yuri = Usuario('Yuri')
-        menor_valor_esperado = 100.0
-        maior_valor_esperado = 150.0
-
-        lance_do_yuri = Lance(yuri, menor_valor_esperado)
-        lance_do_gui = Lance(gui, maior_valor_esperado)
-
-        leilao = Leilao('Celular')
-
-        leilao.lances.append(lance_do_yuri)
-        leilao.lances.append(lance_do_gui)
+        self.leilao.lances.append(self.lance_do_yuri)
+        self.leilao.lances.append(self.lance_do_gui)
 
         avaliador = Avaliador()
-        avaliador.avalia(leilao)
+        avaliador.avalia(self.leilao)
 
-        self.assertEqual(menor_valor_esperado, avaliador.menor_lance)
-        self.assertEqual(maior_valor_esperado, avaliador.maior_lance)
+        self.assertEqual(self.menor_valor_esperado, avaliador.menor_lance)
+        self.assertEqual(self.maior_valor_esperado, avaliador.maior_lance)
 
     def test_deve_retornar_o_mesmo_valor_para_o_maior_e_menor_lance_quando_o_leilao_tiver_um_lance(self):
-        gui = Usuario('Gui')
-        maior_valor_esperado = 150.0
-
-        lance_do_gui = Lance(gui, maior_valor_esperado)
-
-        leilao = Leilao('Celular')
-
-        leilao.lances.append(lance_do_gui)
+        self.leilao.lances.append(self.lance_do_gui)
 
         avaliador = Avaliador()
-        avaliador.avalia(leilao)
+        avaliador.avalia(self.leilao)
 
-        self.assertEqual(maior_valor_esperado, avaliador.menor_lance)
-        self.assertEqual(maior_valor_esperado, avaliador.maior_lance)
+        self.assertEqual(self.maior_valor_esperado, avaliador.menor_lance)
+        self.assertEqual(self.maior_valor_esperado, avaliador.maior_lance)
 
     def test_deve_retornar_o_maior_e_menor_lance_quando_o_leilao_tiver_tres_lances(self):
-        gui = Usuario('Gui')
-        yuri = Usuario('Yuri')
-        menor_valor_esperado = 100.0
-        maior_valor_esperado = 150.0
+        outro_lance_do_gui = Lance(self.gui, 120.0)
 
-        lance_do_yuri = Lance(yuri, menor_valor_esperado)
-        lance_do_gui = Lance(gui, maior_valor_esperado)
-        outro_lance_do_gui = Lance(gui, 120)
-
-        leilao = Leilao('Celular')
-
-        leilao.lances.append(lance_do_yuri)
-        leilao.lances.append(lance_do_gui)
-        leilao.lances.append(outro_lance_do_gui)
+        self.leilao.lances.append(self.lance_do_yuri)
+        self.leilao.lances.append(self.lance_do_gui)
+        self.leilao.lances.append(outro_lance_do_gui)
 
         avaliador = Avaliador()
-        avaliador.avalia(leilao)
+        avaliador.avalia(self.leilao)
 
-        self.assertEqual(menor_valor_esperado, avaliador.menor_lance)
-        self.assertEqual(maior_valor_esperado, avaliador.maior_lance)
+        self.assertEqual(self.menor_valor_esperado, avaliador.menor_lance)
+        self.assertEqual(self.maior_valor_esperado, avaliador.maior_lance)
