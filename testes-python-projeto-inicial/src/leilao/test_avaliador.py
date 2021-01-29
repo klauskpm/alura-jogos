@@ -42,3 +42,41 @@ class TestAvaliador(TestCase):
 
         self.assertEqual(menor_valor_esperado, avaliador.menor_lance)
         self.assertEqual(maior_valor_esperado, avaliador.maior_lance)
+
+    def test_deve_retornar_o_mesmo_valor_para_o_maior_e_menor_lance_quando_o_leilao_tiver_um_lance(self):
+        gui = Usuario('Gui')
+        maior_valor_esperado = 150.0
+
+        lance_do_gui = Lance(gui, maior_valor_esperado)
+
+        leilao = Leilao('Celular')
+
+        leilao.lances.append(lance_do_gui)
+
+        avaliador = Avaliador()
+        avaliador.avalia(leilao)
+
+        self.assertEqual(maior_valor_esperado, avaliador.menor_lance)
+        self.assertEqual(maior_valor_esperado, avaliador.maior_lance)
+
+    def test_deve_retornar_o_maior_e_menor_lance_quando_o_leilao_tiver_tres_lances(self):
+        gui = Usuario('Gui')
+        yuri = Usuario('Yuri')
+        menor_valor_esperado = 100.0
+        maior_valor_esperado = 150.0
+
+        lance_do_yuri = Lance(yuri, menor_valor_esperado)
+        lance_do_gui = Lance(gui, maior_valor_esperado)
+        outro_lance_do_gui = Lance(gui, 120)
+
+        leilao = Leilao('Celular')
+
+        leilao.lances.append(lance_do_yuri)
+        leilao.lances.append(lance_do_gui)
+        leilao.lances.append(outro_lance_do_gui)
+
+        avaliador = Avaliador()
+        avaliador.avalia(leilao)
+
+        self.assertEqual(menor_valor_esperado, avaliador.menor_lance)
+        self.assertEqual(maior_valor_esperado, avaliador.maior_lance)
