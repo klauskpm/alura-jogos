@@ -26,7 +26,10 @@ class Leilao:
 
     @property
     def lances(self):
-        return self.__lances
+        return self.__lances[:]
+
+    def dar_lance(self, lance: Lance):
+        return self.__lances.append(lance)
 
 
 class Avaliador:
