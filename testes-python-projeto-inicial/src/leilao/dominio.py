@@ -32,9 +32,9 @@ class Leilao:
 
     def dar_lance(self, lance: Lance):
         if self.__lances and lance.usuario == self.__lances[-1].usuario:
-            return
+            raise ValueError('O mesmo usuário não pode propror dois lances seguidos')
 
         self.menor_lance = lance.valor if lance.valor < self.menor_lance else self.menor_lance
         self.maior_lance = lance.valor if lance.valor > self.maior_lance else self.maior_lance
 
-        return self.__lances.append(lance)
+        self.__lances.append(lance)

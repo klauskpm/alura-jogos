@@ -44,8 +44,8 @@ class TestLeilao(TestCase):
         yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
         outro_lance_do_gui = Lance(self.gui, 120.0)
 
-        self.leilao.dar_lance(lance_do_yuri)
         self.leilao.dar_lance(self.lance_do_gui)
+        self.leilao.dar_lance(lance_do_yuri)
         self.leilao.dar_lance(outro_lance_do_gui)
 
         self.assertEqual(self.menor_valor_esperado, self.leilao.menor_lance)
@@ -68,10 +68,20 @@ class TestLeilao(TestCase):
         self.assertEqual(2, quantidade_de_lances_recebidos)
 
     # se o o ultimo usuario for o mesmo, não deve permitir propor o lance
-    def test_nao_deve_permitir_propror_um_lance_caso_o_ultimo_usuario_seja_o_mesmo(self):
+    def test_nao_deve_permitir_propror_um_lance_caso_o_ultimo_usuario_seja_o_mesmo_com_fail(self):
         outro_lance_do_gui = Lance(self.gui, 200)
-        self.leilao.dar_lance(self.lance_do_gui)
-        self.leilao.dar_lance(outro_lance_do_gui)
 
-        quantidade_de_lances_recebidos = len(self.leilao.lances)
-        self.assertEqual(1, quantidade_de_lances_recebidos)
+        try:
+            self.leilao.dar_lance(self.lance_do_gui)
+            self.leilao.dar_lance(outro_lance_do_gui)
+            self.fail(msg='Não lançou a exceção')
+        except ValueError:
+            quantidade_de_lances_recebidos = len(self.leilao.lances)
+            self.assertEqual(1, quantidade_de_lances_recebidos)
+
+    def test_nao_deve_permitir_propror_um_lance_caso_o_ultimo_usuario_seja_o_mesmo_com_with(self):
+        outro_lance_do_gui = Lance(self.gui, 200)
+
+        with self.assertRaises(ValueError):
+            self.leilao.dar_lance(self.lance_do_gui)
+            self.leilao.dar_lance(outro_lance_do_gui)
