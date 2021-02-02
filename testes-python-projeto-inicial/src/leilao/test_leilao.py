@@ -12,21 +12,23 @@ class TestLeilao(TestCase):
 
         self.leilao = Leilao('Celular')
 
-    def setUp_yuri(self) -> None:
-        self.yuri = Usuario('Yuri')
-        self.lance_do_yuri = Lance(self.yuri, self.menor_valor_esperado)
+    def setUp_yuri(self, valor):
+        yuri = Usuario('Yuri')
+        lance_do_yuri = Lance(yuri, valor)
+
+        return yuri, lance_do_yuri
 
     def test_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_crescente(self):
-        self.setUp_yuri()
+        yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
         self.leilao.dar_lance(self.lance_do_gui)
-        self.leilao.dar_lance(self.lance_do_yuri)
+        self.leilao.dar_lance(lance_do_yuri)
 
         self.assertEqual(self.menor_valor_esperado, self.leilao.menor_lance)
         self.assertEqual(self.maior_valor_esperado, self.leilao.maior_lance)
 
     def test_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_decrescente(self):
-        self.setUp_yuri()
-        self.leilao.dar_lance(self.lance_do_yuri)
+        yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
+        self.leilao.dar_lance(lance_do_yuri)
         self.leilao.dar_lance(self.lance_do_gui)
 
         self.assertEqual(self.menor_valor_esperado, self.leilao.menor_lance)
@@ -39,12 +41,37 @@ class TestLeilao(TestCase):
         self.assertEqual(self.maior_valor_esperado, self.leilao.maior_lance)
 
     def test_deve_retornar_o_maior_e_menor_lance_quando_o_leilao_tiver_tres_lances(self):
-        self.setUp_yuri()
+        yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
         outro_lance_do_gui = Lance(self.gui, 120.0)
 
-        self.leilao.dar_lance(self.lance_do_yuri)
+        self.leilao.dar_lance(lance_do_yuri)
         self.leilao.dar_lance(self.lance_do_gui)
         self.leilao.dar_lance(outro_lance_do_gui)
 
         self.assertEqual(self.menor_valor_esperado, self.leilao.menor_lance)
         self.assertEqual(self.maior_valor_esperado, self.leilao.maior_lance)
+
+    # se o leilao não tiver lances, deve permitir propor um lance
+    def test_deve_permitir_propor_um_lance_caso_o_leilao_nao_tenha_lances(self):
+        self.leilao.dar_lance(self.lance_do_gui)
+
+        quantidade_de_lances_recebidos = len(self.leilao.lances)
+        self.assertEqual(1, quantidade_de_lances_recebidos)
+
+    # se o ultimo usuario for diferente, deve permitir propor o lance
+    def test_deve_permitir_propor_um_lance_caso_o_ultimo_usuario_seja_diferente(self):
+        yuri, lance_do_yuri = self.setUp_yuri(200)
+        self.leilao.dar_lance(self.lance_do_gui)
+        self.leilao.dar_lance(lance_do_yuri)
+
+        quantidade_de_lances_recebidos = len(self.leilao.lances)
+        self.assertEqual(2, quantidade_de_lances_recebidos)
+
+    # se o o ultimo usuario for o mesmo, não deve permitir propor o lance
+    def test_nao_deve_permitir_propror_um_lance_caso_o_ultimo_usuario_seja_o_mesmo(self):
+        outro_lance_do_gui = Lance(self.gui, 200)
+        self.leilao.dar_lance(self.lance_do_gui)
+        self.leilao.dar_lance(outro_lance_do_gui)
+
+        quantidade_de_lances_recebidos = len(self.leilao.lances)
+        self.assertEqual(1, quantidade_de_lances_recebidos)
