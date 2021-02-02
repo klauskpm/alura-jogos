@@ -2,7 +2,7 @@ from unittest import TestCase
 from dominio import Usuario, Lance, Leilao
 
 
-class TestAvaliador(TestCase):
+class TestLeilao(TestCase):
     def setUp(self) -> None:
         self.menor_valor_esperado = 100.0
         self.maior_valor_esperado = 150.0
