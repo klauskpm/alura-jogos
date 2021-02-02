@@ -20,19 +20,18 @@ class TestLeilao(TestCase):
 
     def test_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_crescente(self):
         yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
-        self.leilao.dar_lance(self.lance_do_gui)
-        self.leilao.dar_lance(lance_do_yuri)
-
-        self.assertEqual(self.menor_valor_esperado, self.leilao.menor_lance)
-        self.assertEqual(self.maior_valor_esperado, self.leilao.maior_lance)
-
-    def test_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_decrescente(self):
-        yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
         self.leilao.dar_lance(lance_do_yuri)
         self.leilao.dar_lance(self.lance_do_gui)
 
         self.assertEqual(self.menor_valor_esperado, self.leilao.menor_lance)
         self.assertEqual(self.maior_valor_esperado, self.leilao.maior_lance)
+
+    def test_nao_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_decrescente(self):
+        with self.assertRaises(ValueError):
+            yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
+
+            self.leilao.dar_lance(self.lance_do_gui)
+            self.leilao.dar_lance(lance_do_yuri)
 
     def test_deve_retornar_o_mesmo_valor_para_o_maior_e_menor_lance_quando_o_leilao_tiver_um_lance(self):
         self.leilao.dar_lance(self.lance_do_gui)
@@ -42,13 +41,13 @@ class TestLeilao(TestCase):
 
     def test_deve_retornar_o_maior_e_menor_lance_quando_o_leilao_tiver_tres_lances(self):
         yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
-        outro_lance_do_gui = Lance(self.gui, 120.0)
+        outro_lance_do_gui = Lance(self.gui, 90.0)
 
-        self.leilao.dar_lance(self.lance_do_gui)
-        self.leilao.dar_lance(lance_do_yuri)
         self.leilao.dar_lance(outro_lance_do_gui)
+        self.leilao.dar_lance(lance_do_yuri)
+        self.leilao.dar_lance(self.lance_do_gui)
 
-        self.assertEqual(self.menor_valor_esperado, self.leilao.menor_lance)
+        self.assertEqual(90.0, self.leilao.menor_lance)
         self.assertEqual(self.maior_valor_esperado, self.leilao.maior_lance)
 
     # se o leilao não tiver lances, deve permitir propor um lance

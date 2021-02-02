@@ -31,6 +31,9 @@ class Leilao:
         return self.__lances[:]
 
     def dar_lance(self, lance: Lance):
+        if self.maior_lance > lance.valor:
+            raise ValueError('Você só pode dar lances maiores do que já foram dados')
+
         if self.__lances and lance.usuario == self.__lances[-1].usuario:
             raise ValueError('O mesmo usuário não pode propror dois lances seguidos')
 
