@@ -3,12 +3,22 @@ import sys
 
 class Usuario:
 
-    def __init__(self, nome):
+    def __init__(self, nome, dinheiro=0):
         self.__nome = nome
+        self.__carteira = dinheiro
 
     @property
     def nome(self):
         return self.__nome
+
+    @property
+    def carteira(self):
+        return self.__nome
+
+    def propor_lance(self, leilao: 'Leilao', valor):
+        lance = Lance(self, valor)
+        leilao.dar_lance(lance)
+        self.__carteira -= valor
 
 
 class Lance:
