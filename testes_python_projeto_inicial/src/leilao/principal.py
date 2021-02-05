@@ -1,4 +1,4 @@
-from dominio import Usuario, Lance, Leilao
+from testes_python_projeto_inicial.src.leilao.dominio import Usuario, Lance, Leilao
 
 gui = Usuario('Gui')
 yuri = Usuario('Yuri')

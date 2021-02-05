@@ -1,4 +1,4 @@
-from ..src.leilao.dominio import Usuario, Leilao
+from testes_python_projeto_inicial.src.leilao.dominio import Usuario, Leilao
 
 import pytest
 
