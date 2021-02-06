@@ -15,13 +15,3 @@ def clear():
 
 def normalize(word):
     return word.strip().upper()
-
-
-def map_positions(word):
-    positions_dict = defaultdict(list)
-
-    for i in range(len(word)):
-        letter = word[i]
-        positions_dict[letter].append(i)
-
-    return positions_dict
