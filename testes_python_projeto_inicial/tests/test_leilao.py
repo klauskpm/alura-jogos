@@ -1,5 +1,6 @@
 from unittest import TestCase
 from testes_python_projeto_inicial.src.leilao.dominio import Usuario, Lance, Leilao
+from testes_python_projeto_inicial.src.leilao.excecoes import LanceInvalido
 
 
 class TestLeilao(TestCase):
@@ -27,7 +28,7 @@ class TestLeilao(TestCase):
         self.assertEqual(self.maior_valor_esperado, self.leilao.maior_lance)
 
     def test_nao_deve_retornar_o_maior_e_o_menor_valor_de_um_lance_quando_adicionados_em_ordem_decrescente(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(LanceInvalido):
             yuri, lance_do_yuri = self.setUp_yuri(self.menor_valor_esperado)
 
             self.leilao.dar_lance(self.lance_do_gui)
@@ -74,13 +75,13 @@ class TestLeilao(TestCase):
             self.leilao.dar_lance(self.lance_do_gui)
             self.leilao.dar_lance(outro_lance_do_gui)
             self.fail(msg='Não lançou a exceção')
-        except ValueError:
+        except LanceInvalido:
             quantidade_de_lances_recebidos = len(self.leilao.lances)
             self.assertEqual(1, quantidade_de_lances_recebidos)
 
     def test_nao_deve_permitir_propror_um_lance_caso_o_ultimo_usuario_seja_o_mesmo_com_with(self):
         outro_lance_do_gui = Lance(self.gui, 200)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(LanceInvalido):
             self.leilao.dar_lance(self.lance_do_gui)
             self.leilao.dar_lance(outro_lance_do_gui)

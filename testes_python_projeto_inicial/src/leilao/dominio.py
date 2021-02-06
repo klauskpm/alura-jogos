@@ -1,3 +1,6 @@
+from testes_python_projeto_inicial.src.leilao.excecoes import LanceInvalido
+
+
 class Usuario:
 
     def __init__(self, nome, dinheiro=0):
@@ -14,7 +17,7 @@ class Usuario:
 
     def propor_lance(self, leilao: 'Leilao', valor):
         if valor > self.__carteira:
-            raise ValueError('Não pode propor um lance com um valor maior que o valor da carteira')
+            raise LanceInvalido('Não pode propor um lance com um valor maior que o valor da carteira')
 
         lance = Lance(self, valor)
         leilao.dar_lance(lance)
@@ -51,10 +54,10 @@ class Leilao:
 
     def _validar_lance(self, lance: Lance):
         if self._tem_dinheiro(lance.valor):
-            raise ValueError('Você só pode dar lances maiores do que já foram dados')
+            raise LanceInvalido('Você só pode dar lances maiores do que já foram dados')
 
         if self._sao_usuarios_iguais(lance.usuario):
-            raise ValueError('O mesmo usuário não pode propror dois lances seguidos')
+            raise LanceInvalido('O mesmo usuário não pode propror dois lances seguidos')
 
     def _tem_lances(self):
         return self.__lances

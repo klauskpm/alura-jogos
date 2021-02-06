@@ -2,6 +2,8 @@ from testes_python_projeto_inicial.src.leilao.dominio import Usuario, Leilao
 
 import pytest
 
+from testes_python_projeto_inicial.src.leilao.excecoes import LanceInvalido
+
 
 @pytest.fixture()
 def vini():
@@ -32,6 +34,6 @@ def test_deve_permitir_propor_lance_quando_valor_for_igual_ao_valor_da_carteira(
 
 
 def test_nao_deve_permitir_propor_lance_quando_valor_for_maior_que_o_valor_da_carteira(vini, leilao):
-    with pytest.raises(ValueError):
+    with pytest.raises(LanceInvalido):
         vini.propor_lance(leilao, 101.0)
 
