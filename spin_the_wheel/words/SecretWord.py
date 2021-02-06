@@ -15,7 +15,7 @@ class SecretWord:
         self.was_guessed = False
 
     @staticmethod
-    def _get_random_secret_word(file_path='words/assets/fruits.txt'):
+    def _get_random_secret_word(file_path='words/assets/video_games.txt'):
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
 
