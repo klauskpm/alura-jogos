@@ -1,4 +1,3 @@
-from random import randrange
 from time import sleep
 
 from player import InputPlayerScene
