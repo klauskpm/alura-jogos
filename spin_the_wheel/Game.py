@@ -23,12 +23,14 @@ class Game:
         self._end_game(players)
 
     def _input_players(self):
-        players = (
-            Player('Klaus'),
-            Player('Michelle'),
-            Player('Marcia')
-        )
-        return players
+        players_count = int(input("Quantos jogadores serão?"))
+        players = []
+        while players_count > 0:
+            player_name = input('Qual o nome do jogador?')
+            players.append(Player(player_name))
+            players_count -= 1
+
+        return tuple(players)
 
     def _end_game(self, players):
         clear()
