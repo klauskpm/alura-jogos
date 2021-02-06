@@ -1,16 +1,18 @@
 from random import randrange
+from re import match
 from spin_the_wheel.helpers import normalize, map_positions
 
 
 class SecretWord:
     __PLACEHOLDER_LETTER = '_'
+    __VALID_LETTERS_PATTERN = '[a-zA-Z0-9]'
 
     def __init__(self, word: str = None):
         if not word:
             word = SecretWord._get_random_secret_word()
 
         self._secret_word = normalize(word)
-        self._hidden_word = [SecretWord.__PLACEHOLDER_LETTER for _ in self._secret_word]
+        self._hidden_word = self._create_hidden_word()
         self._letter_positions_dict = map_positions(self._secret_word)
         self.was_guessed = False
 
@@ -20,6 +22,19 @@ class SecretWord:
             words = [line for line in file]
 
         return words[randrange(0, len(words))]
+
+    @staticmethod
+    def _is_letter_valid(letter):
+        return match(SecretWord.__VALID_LETTERS_PATTERN, letter)
+
+    def _create_hidden_word(self):
+        hidden_word = []
+        for letter in self._secret_word:
+            if self._is_letter_valid(letter):
+                hidden_word.append(SecretWord.__PLACEHOLDER_LETTER)
+            else:
+                hidden_word.append(letter)
+        return hidden_word
 
     def get_word(self):
         return self._secret_word
