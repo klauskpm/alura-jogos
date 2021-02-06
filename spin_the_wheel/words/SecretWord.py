@@ -1,13 +1,18 @@
+import os
 from random import randrange
 from re import match
 from collections import defaultdict
 
 from spin_the_wheel.helpers import normalize
 
+# Look for your absolute directory path
+absolute_path = os.path.dirname(os.path.abspath(__file__))
+
 
 class SecretWord:
     __PLACEHOLDER_LETTER = '_'
     __VALID_LETTERS_PATTERN = '[a-zA-Z0-9]'
+    __DEFAULT_FILE_PATH = f'{absolute_path}/assets/video_games.txt'
 
     def __init__(self, word: str = None):
         if not word:
@@ -19,11 +24,15 @@ class SecretWord:
         self.was_guessed = False
 
     @staticmethod
-    def _get_random_secret_word(file_path='words/assets/video_games.txt'):
+    def _get_random_secret_word(file_path=None):
+        if not file_path:
+            file_path = SecretWord.__DEFAULT_FILE_PATH
+
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
 
-        return words[randrange(0, len(words))]
+        random_word = words[randrange(0, len(words))]
+        return random_word.strip()
 
     @staticmethod
     def _is_letter_valid(letter):
