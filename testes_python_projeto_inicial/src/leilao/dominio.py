@@ -1,6 +1,3 @@
-import sys
-
-
 class Usuario:
 
     def __init__(self, nome, dinheiro=0):
@@ -36,21 +33,37 @@ class Leilao:
     def __init__(self, descricao):
         self.descricao = descricao
         self.__lances = []
-        self.maior_lance = sys.float_info.min
-        self.menor_lance = sys.float_info.max
+        self.maior_lance = 0.0
+        self.menor_lance = 0.0
 
     @property
     def lances(self):
         return self.__lances[:]
 
     def dar_lance(self, lance: Lance):
-        if self.maior_lance > lance.valor:
-            raise ValueError('Você só pode dar lances maiores do que já foram dados')
+        self._validar_lance(lance)
 
-        if self.__lances and lance.usuario == self.__lances[-1].usuario:
-            raise ValueError('O mesmo usuário não pode propror dois lances seguidos')
-
-        self.menor_lance = lance.valor if lance.valor < self.menor_lance else self.menor_lance
-        self.maior_lance = lance.valor if lance.valor > self.maior_lance else self.maior_lance
+        if not self._tem_lances():
+            self.menor_lance = lance.valor
+        self.maior_lance = lance.valor
 
         self.__lances.append(lance)
+
+    def _validar_lance(self, lance: Lance):
+        if self._tem_dinheiro(lance.valor):
+            raise ValueError('Você só pode dar lances maiores do que já foram dados')
+
+        if self._sao_usuarios_iguais(lance.usuario):
+            raise ValueError('O mesmo usuário não pode propror dois lances seguidos')
+
+    def _tem_lances(self):
+        return self.__lances
+
+    def _tem_dinheiro(self, valor):
+        return self.maior_lance > valor
+
+    def _sao_usuarios_iguais(self, usuario):
+        if not self._tem_lances():
+            return False
+
+        return usuario == self.__lances[-1].usuario
