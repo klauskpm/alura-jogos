@@ -1,4 +1,4 @@
-from random import randint
+from random import randrange
 from time import sleep
 
 from Player import Player
@@ -57,7 +57,7 @@ class Game:
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
 
-        return words[randint(0, len(words) - 1)]
+        return words[randrange(0, len(words))]
 
     def _print_opening_message(self):
         clear()
