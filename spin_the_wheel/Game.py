@@ -17,14 +17,18 @@ class Game:
         self._print_opening_message()
 
         secret_world = self._get_random_secret_word()
+        players = self._input_players()
+        Round(secret_world, players).run()
+
+        self._end_game(players)
+
+    def _input_players(self):
         players = (
             Player('Klaus'),
             Player('Michelle'),
             Player('Marcia')
         )
-        Round(secret_world, players).run()
-
-        self._end_game(players)
+        return players
 
     def _end_game(self, players):
         clear()
