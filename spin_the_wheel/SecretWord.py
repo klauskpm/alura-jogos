@@ -1,14 +1,25 @@
+from random import randrange
 from helpers import normalize, map_positions
 
 
 class SecretWord:
     __PLACEHOLDER_LETTER = '_'
 
-    def __init__(self, word):
+    def __init__(self, word: str = None):
+        if not word:
+            word = SecretWord._get_random_secret_word()
+
         self._secret_word = normalize(word)
         self._hidden_word = [SecretWord.__PLACEHOLDER_LETTER for _ in self._secret_word]
         self._letter_positions_dict = map_positions(self._secret_word)
         self.was_guessed = False
+
+    @staticmethod
+    def _get_random_secret_word(file_path='words/fruits.txt'):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            words = [line for line in file]
+
+        return words[randrange(0, len(words))]
 
     def get_word(self):
         return self._secret_word

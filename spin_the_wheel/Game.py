@@ -4,6 +4,7 @@ from time import sleep
 from player import InputPlayerScene
 from Round import Round
 from helpers import sleep, clear
+from SecretWord import SecretWord
 
 
 class Game:
@@ -16,7 +17,7 @@ class Game:
     def start(self):
         self._print_opening_message()
 
-        secret_world = self._get_random_secret_word()
+        secret_world = SecretWord()
         players = InputPlayerScene.input_players()
         Round(secret_world, players).run()
 
@@ -44,12 +45,6 @@ class Game:
     def _print_victory_message(self, players):
         self._print_top_five_ranking(players)
         print(self._victory_message)
-
-    def _get_random_secret_word(self, file_path='words/fruits.txt'):
-        with open(file_path, 'r', encoding='utf-8') as file:
-            words = [line for line in file]
-
-        return words[randrange(0, len(words))]
 
     def _print_opening_message(self):
         clear()

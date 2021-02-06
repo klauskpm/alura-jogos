@@ -7,10 +7,10 @@ from helpers import clear, sleep, normalize
 
 
 class Round:
-    def __init__(self, word: str, players: Tuple[Player, ...] = None):
+    def __init__(self, secret_word: SecretWord, players: Tuple[Player, ...] = None):
         self._set_players(players)
         self._set_wheel()
-        self._set_secret_word(word)
+        self._set_secret_word(secret_word)
 
     def _set_players(self, players):
         if players is None:
@@ -24,8 +24,8 @@ class Round:
         self._wheel = Wheel([100, 200, 300, 400, 500])
         self._letter_value = 0
 
-    def _set_secret_word(self, word):
-        self._secret_word = SecretWord(word)
+    def _set_secret_word(self, secret_word):
+        self._secret_word = secret_word
         self._guessed_letters = []
 
     def run(self):
