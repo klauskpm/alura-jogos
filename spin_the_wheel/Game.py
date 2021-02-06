@@ -3,7 +3,7 @@ from time import sleep
 from player import InputPlayerScene
 from Round import Round
 from helpers import sleep, clear
-from SecretWord import SecretWord
+from words import SecretWord
 
 
 class Game:
