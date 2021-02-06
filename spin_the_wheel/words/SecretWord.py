@@ -1,6 +1,8 @@
 from random import randrange
 from re import match
-from spin_the_wheel.helpers import normalize, map_positions
+from collections import defaultdict
+
+from spin_the_wheel.helpers import normalize
 
 
 class SecretWord:
@@ -13,7 +15,7 @@ class SecretWord:
 
         self._secret_word = normalize(word)
         self._hidden_word = self._create_hidden_word()
-        self._letter_positions_dict = map_positions(self._secret_word)
+        self._letter_positions_dict = self._map_positions(self._secret_word)
         self.was_guessed = False
 
     @staticmethod
@@ -26,6 +28,16 @@ class SecretWord:
     @staticmethod
     def _is_letter_valid(letter):
         return match(SecretWord.__VALID_LETTERS_PATTERN, letter)
+
+    def _map_positions(self, word):
+        positions_dict = defaultdict(list)
+
+        for i in range(len(word)):
+            letter = word[i]
+            if self._is_letter_valid(letter):
+                positions_dict[letter].append(i)
+
+        return positions_dict
 
     def _create_hidden_word(self):
         hidden_word = []
