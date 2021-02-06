@@ -1,7 +1,7 @@
 from random import randrange
 from time import sleep
 
-from Player import Player
+from player import InputPlayerScene
 from Round import Round
 from helpers import sleep, clear
 
@@ -17,20 +17,10 @@ class Game:
         self._print_opening_message()
 
         secret_world = self._get_random_secret_word()
-        players = self._input_players()
+        players = InputPlayerScene.input_players()
         Round(secret_world, players).run()
 
         self._end_game(players)
-
-    def _input_players(self):
-        players_count = int(input("Quantos jogadores serão?"))
-        players = []
-        while players_count > 0:
-            player_name = input('Qual o nome do jogador?')
-            players.append(Player(player_name))
-            players_count -= 1
-
-        return tuple(players)
 
     def _end_game(self, players):
         clear()

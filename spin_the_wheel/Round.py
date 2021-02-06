@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from Player import Player
+from player import Player
 from SecretWord import SecretWord
 from Wheel import Wheel
 from helpers import clear, sleep, normalize
