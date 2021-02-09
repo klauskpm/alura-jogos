@@ -35,8 +35,8 @@ class SecretWord:
         return random_word.strip()
 
     @staticmethod
-    def _is_letter_valid(letter):
-        return match(SecretWord.__VALID_LETTERS_PATTERN, letter)
+    def _is_letter_valid(letter: str):
+        return bool(match(SecretWord.__VALID_LETTERS_PATTERN, letter))
 
     def _map_positions(self, word):
         positions_dict = defaultdict(list)
