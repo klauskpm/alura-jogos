@@ -42,3 +42,27 @@ class Test__is_letter_valid:
         assert not from_dash
         assert not from_exclamation
         assert not from_space
+
+
+class Test__map_positions:
+    def test_should_only_map_valid_letters(self):
+        sw = SecretWord('Spider-Man 3: Venom')
+        mapped_positions = sw._map_positions()
+
+        assert len(mapped_positions['E']) == 2
+        assert len(mapped_positions['S']) == 1
+        assert len(mapped_positions['3']) == 1
+        assert len(mapped_positions[' ']) == 0
+        assert len(mapped_positions['-']) == 0
+        assert len(mapped_positions[':']) == 0
+
+    def test_should_map_letters_with_and_without_accentuation_as_the_same(self):
+        sw = SecretWord('Sabão em pó')
+        mapped_positions = sw._map_positions()
+
+        print('space', mapped_positions)
+
+        assert len(mapped_positions['A']) == 2
+        assert len(mapped_positions['O']) == 2
+        assert len(mapped_positions['S']) == 1
+        assert len(mapped_positions['B']) == 1

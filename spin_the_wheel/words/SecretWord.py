@@ -2,6 +2,7 @@ import os
 from random import randrange
 from re import match
 from collections import defaultdict
+import unidecode
 
 from spin_the_wheel.helpers import normalize
 
@@ -20,7 +21,7 @@ class SecretWord:
 
         self._secret_word = normalize(word)
         self._hidden_word = self._create_hidden_word()
-        self._letter_positions_dict = self._map_positions(self._secret_word)
+        self._letter_positions_dict = self._map_positions()
         self.was_guessed = False
 
     @staticmethod
@@ -38,11 +39,12 @@ class SecretWord:
     def _is_letter_valid(letter: str):
         return bool(match(SecretWord.__VALID_LETTERS_PATTERN, letter))
 
-    def _map_positions(self, word):
+    def _map_positions(self):
         positions_dict = defaultdict(list)
+        normalized_word = unidecode.unidecode(self._secret_word)
 
-        for i in range(len(word)):
-            letter = word[i]
+        for i in range(len(normalized_word)):
+            letter = normalized_word[i]
             if self._is_letter_valid(letter):
                 positions_dict[letter].append(i)
 
