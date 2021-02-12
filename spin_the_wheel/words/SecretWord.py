@@ -5,6 +5,7 @@ from collections import defaultdict
 import unidecode
 
 from spin_the_wheel.helpers import normalize
+from .exceptions import InvalidLetter
 
 # Look for your absolute directory path
 absolute_path = os.path.dirname(os.path.abspath(__file__))
@@ -75,7 +76,11 @@ class SecretWord:
 
         self.was_guessed = SecretWord.__PLACEHOLDER_LETTER not in self._hidden_word
 
-    def has_letter(self, letter):
+    def has_letter(self, letter: str):
+        if not self._is_letter_valid(letter):
+            raise InvalidLetter('Busque por outra letra')
+
+        letter = letter.upper()
         return letter in self._letter_positions_dict
 
     def get_letter_count(self, letter):

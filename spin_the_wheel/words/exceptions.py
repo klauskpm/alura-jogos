@@ -1,0 +1,2 @@
+class InvalidLetter(Exception):
+    pass

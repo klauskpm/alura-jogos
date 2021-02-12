@@ -1,7 +1,7 @@
 import pytest
 from random import seed
 
-from spin_the_wheel.words import SecretWord
+from spin_the_wheel.words import SecretWord, InvalidLetter
 
 
 @pytest.fixture(scope='module')
@@ -66,3 +66,54 @@ class Test__map_positions:
         assert len(mapped_positions['O']) == 2
         assert len(mapped_positions['S']) == 1
         assert len(mapped_positions['B']) == 1
+
+
+class Test_get_word:
+    def test_should_return_a_upper_cased_and_stripped_word(self):
+        og_word = ' la casa de papel '
+        sw = SecretWord(og_word)
+        word = sw.get_word()
+
+        assert word == og_word.upper().strip()
+
+
+class Test_get_hidden_word:
+    def test_should_return_the_word_as_a_list_with_valid_letters_replaced(self):
+        og_word = 'Spider-Man 3: Venom'
+        sw = SecretWord(og_word)
+        hidden_word = sw.get_hidden_word()
+
+        assert ' '.join(hidden_word) == '_ _ _ _ _ _ - _ _ _   _ :   _ _ _ _ _'
+
+
+class Test_has_letter:
+    def test_should_return_true_if_has_letter(self):
+        og_word = 'abc def hij'
+        sw = SecretWord(og_word)
+
+        assert sw.has_letter('A')
+        assert sw.has_letter('B')
+        assert sw.has_letter('D')
+
+    def test_should_return_false_if_doesnt_have_letter(self):
+        og_word = 'abc def hij'
+        sw = SecretWord(og_word)
+
+        assert not sw.has_letter('K')
+        assert not sw.has_letter('R')
+        assert not sw.has_letter('M')
+
+    def test_should_not_care_about_case_sensitive(self):
+        og_word = 'abc def hij'
+        sw = SecretWord(og_word)
+
+        assert sw.has_letter('a')
+        assert sw.has_letter('b')
+        assert sw.has_letter('c')
+
+    def test_should_raise_error_if_try_to_search_invalid_character(self):
+        with pytest.raises(InvalidLetter):
+            og_word = 'abc def hij'
+            sw = SecretWord(og_word)
+
+            assert sw.has_letter('-')
