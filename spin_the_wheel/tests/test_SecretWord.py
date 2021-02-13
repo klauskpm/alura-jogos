@@ -85,6 +85,14 @@ class Test_get_word:
 
         assert word == og_word.upper().strip()
 
+    def test_should_return_the_value_set_for__secret_word(self):
+        og_word = 'just a test'
+        sw = SecretWord('a')
+        sw._secret_word = 'just a test'
+        word = sw.get_word()
+
+        assert word == og_word
+
 
 class Test_get_hidden_word:
     def test_should_return_the_word_as_a_list_with_valid_letters_replaced(self):
@@ -94,6 +102,13 @@ class Test_get_hidden_word:
 
         assert ' '.join(hidden_word) == '_ _ _ _ _ _ - _ _ _   _ :   _ _ _ _ _'
 
+    def test_should_return_the_value_set_for__hidden_word(self):
+        og_word = 'just a test'
+        sw = SecretWord('a')
+        sw._hidden_word = 'just a test'
+        word = sw.get_hidden_word()
+
+        assert word == og_word
 
 class Test_has_letter:
     def test_should_return_true_if_has_letter(self):
