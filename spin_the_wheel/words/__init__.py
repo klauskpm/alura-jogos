@@ -1,2 +1,2 @@
 from .SecretWord import SecretWord
-from .exceptions import InvalidLetter
+from .exceptions import InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
