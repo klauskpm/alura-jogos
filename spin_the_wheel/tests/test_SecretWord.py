@@ -68,6 +68,15 @@ class Test__map_positions:
         assert len(mapped_positions['B']) == 1
 
 
+class Test__create_hidden_word:
+    def test_should_return_the_word_as_a_list_with_valid_letters_replaced(self):
+        og_word = 'Spider-Man 3: Venom'
+        sw = SecretWord(og_word)
+        hidden_word = sw._create_hidden_word()
+
+        assert ' '.join(hidden_word) == '_ _ _ _ _ _ - _ _ _   _ :   _ _ _ _ _'
+
+
 class Test_get_word:
     def test_should_return_a_upper_cased_and_stripped_word(self):
         og_word = ' la casa de papel '
