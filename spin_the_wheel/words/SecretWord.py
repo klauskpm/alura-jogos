@@ -66,7 +66,7 @@ class SecretWord:
     def get_hidden_word(self):
         return self._hidden_word
 
-    def guess_letter(self, letter):
+    def guess_letter(self, letter: str):
         if not self.has_letter(letter):
             return
 
@@ -83,7 +83,7 @@ class SecretWord:
         letter = letter.upper()
         return letter in self._letter_positions_dict
 
-    def get_letter_count(self, letter):
+    def get_letter_count(self, letter: str):
         if not self.has_letter(letter):
             return 0
 
