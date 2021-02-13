@@ -78,7 +78,7 @@ class SecretWord:
 
     def has_letter(self, letter: str):
         if not self._is_letter_valid(letter):
-            raise InvalidLetter('Busque por outra letra')
+            raise InvalidLetter(f'\'{letter}\' não é uma letra válida')
 
         letter = letter.upper()
         return letter in self._letter_positions_dict
