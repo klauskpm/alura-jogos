@@ -8,6 +8,10 @@ from spin_the_wheel.words import SecretWord, InvalidLetter, HasGuessedLetterBefo
 def path_to_words():
     return '../words/assets'
 
+@pytest.fixture()
+def secret_word():
+    return SecretWord('Sabão em pó')
+
 
 class Test__get_random_secret_word:
     def test_should_use_default_file_if_none_is_passed(self):
@@ -124,10 +128,6 @@ class Test_get_hidden_word:
 
 
 class Test_guess_letter:
-    @pytest.fixture()
-    def secret_word(self):
-        return SecretWord('Sabão em pó')
-
     def test_should_raise_error_if_try_to_guess_invalid_character(self, secret_word):
         with pytest.raises(InvalidLetter):
             secret_word.guess_letter('@')
@@ -253,10 +253,6 @@ class Test_has_letter:
 
 
 class Test_get_letter_count:
-    @pytest.fixture()
-    def secret_word(self):
-        return SecretWord('Sabão em pó')
-
     def test_should_return_0_if_letter_is_not_found(self, secret_word):
         count = secret_word.get_letter_count('z')
 
