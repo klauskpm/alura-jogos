@@ -73,9 +73,6 @@ class SecretWord:
                 hidden_word.append(letter)
         return hidden_word
 
-    def _has_guessed_letter_before(self, letter):
-        return letter in self._previously_guessed_letters
-
     def get_word(self):
         return self._secret_word
 
@@ -87,7 +84,8 @@ class SecretWord:
         if self.was_guessed:
             raise NothingLeftToGuess
 
-        if self._has_guessed_letter_before(letter):
+        has_guessed_letter_before = letter in self._previously_guessed_letters
+        if has_guessed_letter_before:
             raise HasGuessedLetterBefore
 
         if not self.has_letter(letter):
