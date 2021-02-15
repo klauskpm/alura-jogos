@@ -110,6 +110,7 @@ class SecretWord:
         return letter in self._letter_positions_dict
 
     def get_letter_count(self, letter: str):
+        letter = self._normalize_letter(letter)
         if not self.has_letter(letter):
             return 0
 

@@ -250,3 +250,23 @@ class Test_has_letter:
             sw = SecretWord(og_word)
 
             assert sw.has_letter('-')
+
+
+class Test_get_letter_count:
+    @pytest.fixture()
+    def secret_word(self):
+        return SecretWord('Sabão em pó')
+
+    def test_should_return_0_if_letter_is_not_found(self, secret_word):
+        count = secret_word.get_letter_count('z')
+
+        assert count == 0
+
+    def test_should_return_the_number_of_times_the_letter_is_found(self, secret_word):
+        count = secret_word.get_letter_count('a')
+
+        assert count == 2
+
+    def test_should_raise_error_if_using_invalid_character(self, secret_word):
+        with pytest.raises(InvalidLetter):
+            secret_word.get_letter_count('@')
