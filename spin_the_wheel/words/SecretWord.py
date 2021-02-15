@@ -44,14 +44,12 @@ class SecretWord:
 
     @staticmethod
     def _normalize_letter(letter: str):
+        letter = letter.strip()
         is_word = len(letter) > 1
         if is_word:
-            letter = (letter.strip())[0]
+            letter = letter[0]
 
-        return unidecode\
-            .unidecode(letter)\
-            .upper()\
-            .strip()
+        return unidecode.unidecode(letter).upper()
 
     def _map_positions(self):
         positions_dict = defaultdict(list)

@@ -8,6 +8,7 @@ from spin_the_wheel.words import SecretWord, InvalidLetter, HasGuessedLetterBefo
 def path_to_words():
     return '../words/assets'
 
+
 @pytest.fixture()
 def secret_word():
     return SecretWord('Sabão em pó')
@@ -53,6 +54,24 @@ class Test__is_letter_valid:
         assert not from_dash
         assert not from_exclamation
         assert not from_space
+
+
+class Test__normalize_letter:
+    def test_should_return_upper_cased_letter(self):
+        letter = SecretWord._normalize_letter('z')
+        assert letter == 'Z'
+
+    def test_should_strip_all_spaces_before_and_after_the_letter(self):
+        letter = SecretWord._normalize_letter('     a     ')
+        assert letter == 'A'
+
+    def test_should_return_accented_letter_without_accentuation(self):
+        letter = SecretWord._normalize_letter('á')
+        assert letter == 'A'
+
+    def test_should_return_only_the_first_letter_if_a_word_is_given(self):
+        letter = SecretWord._normalize_letter('word')
+        assert letter == 'W'
 
 
 class Test__map_positions:
