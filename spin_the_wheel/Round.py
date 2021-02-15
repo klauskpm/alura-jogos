@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from player import Player
-from words import SecretWord
+from words import SecretWord, InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
 from Wheel import Wheel
 from helpers import clear, sleep, normalize
 
@@ -35,10 +35,21 @@ class Round:
         self._print_turn_start_message()
         self._spin_the_wheel()
         sleep(0.6)
+        self._run_second_part_of_turn()
+
+    def _run_second_part_of_turn(self):
         self._print_turn_start_message()
         self._print_letter_value_message()
-        has_guessed_letter = self._do_guess()
-        self._check_round(has_guessed_letter)
+        try:
+            has_guessed_letter = self._do_guess()
+            self._check_round(has_guessed_letter)
+        except (InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess) as error_message:
+            print(error_message)
+            sleep(1.5)
+            self._rerun_turn()
+
+    def _rerun_turn(self):
+        self._run_second_part_of_turn()
 
     def _print_turn_start_message(self):
         clear()
@@ -63,31 +74,17 @@ class Round:
         print()
 
     def _do_guess(self):
-        guess = input("Chute uma letra: ")
+        guess = input("Chute uma letra ou número: ")
         guess = normalize(guess)
-
-        if self._has_guessed_before(guess):
-            return self._run_turn()
 
         return self._check_guess(guess)
 
-    def _has_guessed_before(self, guess):
-        guessed_before = guess in self._guessed_letters
-
-        if (not guessed_before):
-            print(f"Você chutou '{guess}'")
-            self._guessed_letters.append(guess)
-            sleep(0.6)
-        else:
-            print(f"A letra '{guess}' já foi chutada anteriormente")
-            sleep(2)
-
-        return guessed_before
-
     def _check_guess(self, guess):
+        print(f"Você chutou '{guess}'")
         letter_count = self._secret_word.get_letter_count(guess)
-        if letter_count > 0:
-            self._secret_word.guess_letter(guess)
+        has_guessed_letter = self._secret_word.guess_letter(guess)
+
+        if has_guessed_letter:
             earned_money = self._letter_value * letter_count
             print(f"Tem {letter_count} letras '{guess}'")
             sleep(0.5)
@@ -95,20 +92,17 @@ class Round:
             sleep(0.5)
             self._current_player.add_money(earned_money)
             sleep(0.5)
+
+        return has_guessed_letter
+
+    def _check_round(self, has_guessed_letter):
+        if has_guessed_letter and not self._secret_word.was_guessed:
             print("Continue jogando")
             sleep(2)
-            return True
+            return self._continue_turn()
         else:
             print("Não foi dessa vez.")
             sleep(2)
-            return False
-
-    def _check_round(self, has_guessed_letter):
-        if has_guessed_letter and self._secret_word.was_guessed:
-            return True
-        elif has_guessed_letter:
-            return self._continue_turn()
-        else:
             return self._next_turn()
 
     def _continue_turn(self):

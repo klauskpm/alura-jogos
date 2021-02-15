@@ -79,11 +79,11 @@ class SecretWord:
     def guess_letter(self, letter: str):
         letter = SecretWord._normalize_letter(letter)
         if self.was_guessed:
-            raise NothingLeftToGuess
+            raise NothingLeftToGuess('Não tem mais nada para ser adivinhado')
 
         has_guessed_letter_before = letter in self._previously_guessed_letters
         if has_guessed_letter_before:
-            raise HasGuessedLetterBefore
+            raise HasGuessedLetterBefore(f'A letra \'{letter}\' já foi chutada anteriormente')
 
         if not self.has_letter(letter):
             return False
