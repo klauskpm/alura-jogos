@@ -4,7 +4,6 @@ from re import match
 from collections import defaultdict
 import unidecode
 
-from spin_the_wheel.helpers import normalize
 from .exceptions import InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
 
 # Look for your absolute directory path
@@ -20,7 +19,7 @@ class SecretWord:
         if not word:
             word = SecretWord._get_random_secret_word()
 
-        self._secret_word = normalize(word)
+        self._secret_word = word.strip().upper()
         self._hidden_word = self._create_hidden_word()
         self._letter_positions_dict = self._map_positions()
         self._previously_guessed_letters = []
