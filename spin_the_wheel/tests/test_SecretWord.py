@@ -14,6 +14,32 @@ def secret_word():
     return SecretWord('Sabão em pó')
 
 
+class Test___init__:
+    def test_should_use_the_passed_word_as_the_secret_word(self):
+        sw = SecretWord('Sabão em pó')
+
+        assert sw.get_word() == 'SABÃO EM PÓ'
+        assert sw.get_hidden_word().count('_') == 9
+        assert sw.get_letter_count('a') == 2
+        assert sw.get_letter_count('o') == 2
+        assert sw.get_letter_count('e') == 1
+        assert len(sw._previously_guessed_letters) == 0
+        assert not sw.was_guessed
+
+    def test_should_get_random_word_if_none_is_passed(self):
+        seed(3)
+        sw = SecretWord()
+
+        assert sw.get_word() == 'ASTRO BOT'
+        assert sw.get_hidden_word().count('_') == 8
+        assert sw.get_letter_count('a') == 1
+        assert sw.get_letter_count('o') == 2
+        assert sw.get_letter_count('e') == 0
+        assert sw.get_letter_count('t') == 2
+        assert len(sw._previously_guessed_letters) == 0
+        assert not sw.was_guessed
+
+
 class Test__get_random_secret_word:
     def test_should_use_default_file_if_none_is_passed(self):
         seed(3)
