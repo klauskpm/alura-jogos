@@ -2,11 +2,9 @@ import pytest
 
 from spin_the_wheel.player import InputPlayerScene
 
-INPUT = 'builtins.input'
-
 
 @pytest.fixture()
-def input_stub_factory():
+def monkeypatch_input(monkeypatch):
     def factory(players_count: int, names: [str]):
         context = {'count': 0}
 
@@ -22,18 +20,16 @@ def input_stub_factory():
             context['count'] = count + 1
             return content
 
-        return stub
+        monkeypatch.setattr('builtins.input', stub)
 
     return factory
 
 
 class Test_input_players:
-    def test_should_create_one_player_if_passed_only_1(self, monkeypatch, input_stub_factory):
+    def test_should_create_one_player_if_passed_only_1(self, monkeypatch_input):
         self.count = 0
 
-        stub = input_stub_factory(1, ['wow'])
-
-        monkeypatch.setattr(INPUT, stub)
+        monkeypatch_input(1, ['wow'])
         players = InputPlayerScene.input_players()
 
         assert players[0].name == 'Wow'
