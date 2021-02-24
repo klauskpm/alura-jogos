@@ -2,9 +2,6 @@ from .Player import Player
 
 
 class InputPlayerScene:
-    def __init__(self):
-        pass
-
     @staticmethod
     def input_players():
         players_count = int(input("Quantos jogadores serão?"))
