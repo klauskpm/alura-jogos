@@ -1,9 +1,12 @@
-from .exceptions import InvalidAmount
+from .exceptions import InvalidAmount, InvalidName
 
 
 class Player:
     def __init__(self, name, money=0):
-        self._name = name.strip().lower().title()
+        name = name.strip().lower().title()
+        if not name:
+            raise InvalidName('O jogador(a) deve ter um nome')
+        self._name = name
 
         money = int(money)
         if money < 0:
