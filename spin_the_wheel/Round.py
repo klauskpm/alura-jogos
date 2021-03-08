@@ -59,6 +59,11 @@ class Round:
         print('A palavra secreta é:')
         print(' '.join(self._secret_word.get_hidden_word()))
         print()
+        guessed_letters = self._secret_word.previously_guessed_letters
+        if len(guessed_letters) > 0:
+            print('Letras que já foram chutadas:')
+            print(f'[ {", ".join(guessed_letters)} ]')
+            print()
         print(f"Turno: {self._current_player.name} | R${self._current_player.money:.2f}")
         print()
 

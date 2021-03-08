@@ -25,6 +25,10 @@ class SecretWord:
         self._previously_guessed_letters = []
         self.was_guessed = False
 
+    @property
+    def previously_guessed_letters(self):
+        return self._previously_guessed_letters
+
     @staticmethod
     def _get_random_secret_word(file_path=None):
         if not file_path:
