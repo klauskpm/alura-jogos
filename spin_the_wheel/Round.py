@@ -43,10 +43,13 @@ class Round:
         try:
             has_guessed_letter = self._do_guess()
             self._check_round(has_guessed_letter)
-        except (InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess) as error_message:
+        except (InvalidLetter, HasGuessedLetterBefore) as error_message:
             print(error_message)
             sleep(1.5)
             self._rerun_turn()
+        except NothingLeftToGuess as error_message:
+            print(error_message)
+            sleep(1.5)
 
     def _rerun_turn(self):
         self._run_second_part_of_turn()
@@ -96,7 +99,9 @@ class Round:
         return has_guessed_letter
 
     def _check_round(self, has_guessed_letter):
-        if has_guessed_letter and not self._secret_word.was_guessed:
+        if self._secret_word.was_guessed:
+            return
+        elif has_guessed_letter:
             print("Continue jogando")
             sleep(2)
             return self._continue_turn()
