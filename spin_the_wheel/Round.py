@@ -1,6 +1,7 @@
 from typing import Tuple
 
 from player import Player
+from RoundCLI import RoundCLI
 from words import SecretWord, InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
 from Wheel import Wheel
 from helpers import clear, sleep, normalize
@@ -55,17 +56,10 @@ class Round:
         self._run_second_part_of_turn()
 
     def _print_turn_start_message(self):
-        clear()
-        print('A palavra secreta é:')
-        print(' '.join(self._secret_word.get_hidden_word()))
-        print()
+        hidden_word = self._secret_word.get_hidden_word()
         guessed_letters = self._secret_word.previously_guessed_letters
-        if len(guessed_letters) > 0:
-            print('Letras que já foram chutadas:')
-            print(f'[ {", ".join(guessed_letters)} ]')
-            print()
-        print(f"Turno: {self._current_player.name} | R${self._current_player.money:.2f}")
-        print()
+
+        RoundCLI.print_start_message(hidden_word, guessed_letters, self._current_player)
 
     def _spin_the_wheel(self):
         print(
