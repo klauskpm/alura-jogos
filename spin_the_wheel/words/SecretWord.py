@@ -88,6 +88,7 @@ class SecretWord:
         has_guessed_letter_before = letter in self._previously_guessed_letters
         if has_guessed_letter_before:
             raise HasGuessedLetterBefore(f'A letra \'{letter}\' já foi chutada anteriormente')
+        self._previously_guessed_letters.append(letter)
 
         if not self.has_letter(letter):
             return False
@@ -95,8 +96,6 @@ class SecretWord:
         indexes = self._letter_positions_dict[letter]
         for i in indexes:
             self._hidden_word[i] = self._secret_word[i]
-
-        self._previously_guessed_letters.append(letter)
 
         self._letter_positions_dict.pop(letter)
         self.was_guessed = SecretWord.__PLACEHOLDER_LETTER not in self._hidden_word
