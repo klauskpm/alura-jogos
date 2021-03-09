@@ -4,7 +4,7 @@ from player import Player
 from RoundCLI import RoundCLI
 from words import SecretWord, InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
 from Wheel import Wheel
-from helpers import clear, sleep, normalize
+from helpers import sleep
 
 
 class Round:
@@ -35,14 +35,14 @@ class Round:
     def _run_turn(self):
         self._print_turn_start_message()
         self._spin_the_wheel()
-        sleep(0.6)
         self._run_second_part_of_turn()
 
     def _run_second_part_of_turn(self):
         self._print_turn_start_message()
-        self._print_letter_value_message()
+        RoundCLI.print_letter_value_message(self._letter_value)
         try:
-            has_guessed_letter = self._do_guess()
+            guess = RoundCLI.input_guess()
+            has_guessed_letter = self._check_guess(guess)
             self._check_round(has_guessed_letter)
         except (InvalidLetter, HasGuessedLetterBefore) as error_message:
             print(error_message)
@@ -56,10 +56,7 @@ class Round:
         self._run_second_part_of_turn()
 
     def _print_turn_start_message(self):
-        hidden_word = self._secret_word.get_hidden_word()
-        guessed_letters = self._secret_word.previously_guessed_letters
-
-        RoundCLI.print_start_message(hidden_word, guessed_letters, self._current_player)
+        RoundCLI.print_start_message(self._secret_word, self._current_player)
 
     def _spin_the_wheel(self):
         print(
@@ -70,16 +67,7 @@ class Round:
         )
         strength = int(input(''))
         self._letter_value = self._wheel.spin(strength)
-
-    def _print_letter_value_message(self):
-        print(f"Nessa rodada cada letra vale R${self._letter_value:.2f}")
-        print()
-
-    def _do_guess(self):
-        guess = input("Chute uma letra ou número: ")
-        guess = normalize(guess)
-
-        return self._check_guess(guess)
+        sleep(0.6)
 
     def _check_guess(self, guess):
         print(f"Você chutou '{guess}'")
@@ -88,25 +76,20 @@ class Round:
 
         if has_guessed_letter:
             earned_money = self._letter_value * letter_count
-            print(f"Tem {letter_count} letras '{guess}'")
-            sleep(0.5)
-            print(f"Você ganhou R${earned_money:.2f}")
-            sleep(0.5)
             self._current_player.add_money(earned_money)
-            sleep(0.5)
+
+            RoundCLI.print_guessed_correctly_message(letter_count, guess, earned_money)
 
         return has_guessed_letter
 
     def _check_round(self, has_guessed_letter):
         if self._secret_word.was_guessed:
             return
-        elif has_guessed_letter:
-            print("Continue jogando")
-            sleep(2)
+
+        RoundCLI.print_end_turn_message(has_guessed_letter)
+        if has_guessed_letter:
             return self._continue_turn()
         else:
-            print("Não foi dessa vez.")
-            sleep(2)
             return self._next_turn()
 
     def _continue_turn(self):
@@ -118,7 +101,9 @@ class Round:
 
     def _select_next_player(self):
         next_player_index = self._current_player_index + 1
-        if (next_player_index >= self._players_count):
+        index_is_out_of_bounds = next_player_index >= self._players_count
+
+        if index_is_out_of_bounds:
             next_player_index = 0
 
         self._current_player_index = next_player_index
