@@ -59,15 +59,7 @@ class Round:
         RoundCLI.print_start_message(self._secret_word, self._current_player)
 
     def _spin_the_wheel(self):
-        print(
-            'Com que força (número) você quer jogar?\n'
-            '1 - Fraco\n'
-            '2 - Médio\n'
-            '3 - Forte'
-        )
-        strength = int(input(''))
-        self._letter_value = self._wheel.spin(strength)
-        sleep(0.6)
+        self._letter_value = self._wheel.spin()
 
     def _check_guess(self, guess):
         print(f"Você chutou '{guess}'")

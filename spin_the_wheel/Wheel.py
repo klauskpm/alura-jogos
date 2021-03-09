@@ -7,17 +7,19 @@ def to_decimal(value):
 
 
 class Wheel:
-    _STRENGTH_RANGES = {
-        1: (0, 2),
-        2: (3, 7),
-        3: (8, 14),
-    }
+    _STRENGTH_RANGES = [
+        (0, 2),
+        (3, 7),
+        (8, 14),
+    ]
     _PRECISION_FACTOR = (0.9, 1, 1.1)
 
     def __init__(self, options: [int]):
         self._options = options
 
-    def spin(self, strength):
+    def spin(self, strength=None):
+        if not strength:
+            strength = randrange(len(Wheel._STRENGTH_RANGES))
         rand_position = self._get_position(strength)
         return self._options[rand_position]
 
@@ -25,7 +27,7 @@ class Wheel:
         rand_precision = randrange(0, len(Wheel._PRECISION_FACTOR))
         precision = Wheel._PRECISION_FACTOR[rand_precision]
 
-        min_placement, max_placement = Wheel._STRENGTH_RANGES.get(strength)
+        min_placement, max_placement = Wheel._STRENGTH_RANGES[strength]
         rand_placement = randint(min_placement, max_placement)
 
         final_placement = int(to_decimal(rand_placement) * to_decimal(precision))
