@@ -2,6 +2,7 @@ from typing import Tuple
 
 from player import Player
 from RoundCLI import RoundCLI
+from menu import Menu, InvalidMenuOption
 from words import SecretWord, InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
 from Wheel import Wheel
 from helpers import sleep
@@ -12,6 +13,7 @@ class Round:
         self._set_players(players)
         self._set_wheel()
         self._set_secret_word(secret_word)
+        self._set_menu()
 
     def _set_players(self, players):
         if players is None:
@@ -29,13 +31,31 @@ class Round:
         self._secret_word = secret_word
         self._guessed_letters = []
 
+    def _set_menu(self):
+        self._menu = Menu('Escolha uma das opções:', {
+            '1': {
+                'description': 'Rodar a roda',
+                'action': self._spin_the_wheel
+            }
+        })
+
     def run(self):
         return self._run_turn()
 
     def _run_turn(self):
         self._print_turn_start_message()
-        self._spin_the_wheel()
+        self._input_options_menu()
         self._run_second_part_of_turn()
+
+    def _input_options_menu(self):
+        try:
+            option_action = self._menu.input_menu()
+            option_action()
+        except InvalidMenuOption as e:
+            print(e)
+            sleep(1)
+            self._run_turn()
+            return
 
     def _run_second_part_of_turn(self):
         self._print_turn_start_message()
