@@ -16,7 +16,7 @@ class Game:
     def start(self):
         self._print_opening_message()
 
-        secret_world = SecretWord()
+        secret_world = SecretWord('klaus')
         players = InputPlayerScene.input_players()
         Round(secret_world, players).run()
 

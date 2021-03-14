@@ -172,25 +172,25 @@ class Test_get_hidden_word:
         assert word == og_word
 
 
-class Test_guess_letter:
+class Test_reveal_letter:
     def test_should_raise_error_if_try_to_guess_invalid_character(self, secret_word):
         with pytest.raises(InvalidLetter):
-            secret_word.guess_letter('@')
+            secret_word.reveal_letter('@')
 
     def test_should_return_true_if_has_guessed_letter(self, secret_word):
-        has_guessed_letter = secret_word.guess_letter('a')
+        has_guessed_letter = secret_word.reveal_letter('a')
         assert has_guessed_letter
 
     def test_should_return_false_if_has_not_guessed_letter(self, secret_word):
-        has_guessed_letter = secret_word.guess_letter('z')
+        has_guessed_letter = secret_word.reveal_letter('z')
         assert not has_guessed_letter
 
     def test_should_not_change_hidden_word_on_invalid_or_not_found_letter(self, secret_word):
         hidden_word = ' '.join(secret_word.get_hidden_word())
 
-        secret_word.guess_letter('z')
+        secret_word.reveal_letter('z')
         try:
-            secret_word.guess_letter('@')
+            secret_word.reveal_letter('@')
         except InvalidLetter:
             pass
 
@@ -200,7 +200,7 @@ class Test_guess_letter:
 
     def test_should_replace_all_placeholders_that_match_the_letter(self, secret_word):
         hidden_word = ' '.join(secret_word.get_hidden_word())
-        secret_word.guess_letter('o')
+        secret_word.reveal_letter('o')
         new_hidden_word = ' '.join(secret_word.get_hidden_word())
 
         assert hidden_word != new_hidden_word
@@ -209,7 +209,7 @@ class Test_guess_letter:
 
     def test_should_display_accented_letters_as_accented_when_guessed(self, secret_word):
         hidden_word = ' '.join(secret_word.get_hidden_word())
-        secret_word.guess_letter('o')
+        secret_word.reveal_letter('o')
         new_hidden_word = ' '.join(secret_word.get_hidden_word())
 
         assert hidden_word != new_hidden_word
@@ -220,13 +220,13 @@ class Test_guess_letter:
 
     def test_should_not_change_was_guessed_until_guess_all_letters(self, secret_word):
         initial_was_guessed = secret_word.was_guessed
-        secret_word.guess_letter('s')
+        secret_word.reveal_letter('s')
         one_letter_was_guessed = secret_word.was_guessed
-        secret_word.guess_letter('a')
-        secret_word.guess_letter('b')
-        secret_word.guess_letter('o')
-        secret_word.guess_letter('e')
-        secret_word.guess_letter('m')
+        secret_word.reveal_letter('a')
+        secret_word.reveal_letter('b')
+        secret_word.reveal_letter('o')
+        secret_word.reveal_letter('e')
+        secret_word.reveal_letter('m')
         before_all_letters_was_guessed = secret_word.was_guessed
 
         assert not initial_was_guessed
@@ -236,32 +236,32 @@ class Test_guess_letter:
     def test_should_only_change_was_guessed_after_guessing_all_letters(self, secret_word):
         initial_was_guessed = secret_word.was_guessed
 
-        secret_word.guess_letter('s')
-        secret_word.guess_letter('a')
-        secret_word.guess_letter('b')
-        secret_word.guess_letter('o')
-        secret_word.guess_letter('e')
-        secret_word.guess_letter('m')
-        secret_word.guess_letter('p')
+        secret_word.reveal_letter('s')
+        secret_word.reveal_letter('a')
+        secret_word.reveal_letter('b')
+        secret_word.reveal_letter('o')
+        secret_word.reveal_letter('e')
+        secret_word.reveal_letter('m')
+        secret_word.reveal_letter('p')
 
         assert not initial_was_guessed
         assert secret_word.was_guessed
 
     def test_should_raise_error_when_guessing_the_same_letter(self, secret_word):
         with pytest.raises(HasGuessedLetterBefore):
-            secret_word.guess_letter('a')
-            secret_word.guess_letter('a')
+            secret_word.reveal_letter('a')
+            secret_word.reveal_letter('a')
 
     def test_should_raise_error_when_trying_to_guess_a_already_guessed_word(self, secret_word):
         with pytest.raises(NothingLeftToGuess):
-            secret_word.guess_letter('s')
-            secret_word.guess_letter('a')
-            secret_word.guess_letter('b')
-            secret_word.guess_letter('o')
-            secret_word.guess_letter('e')
-            secret_word.guess_letter('m')
-            secret_word.guess_letter('p')
-            secret_word.guess_letter('z')
+            secret_word.reveal_letter('s')
+            secret_word.reveal_letter('a')
+            secret_word.reveal_letter('b')
+            secret_word.reveal_letter('o')
+            secret_word.reveal_letter('e')
+            secret_word.reveal_letter('m')
+            secret_word.reveal_letter('p')
+            secret_word.reveal_letter('z')
 
 
 class Test_has_letter:
@@ -289,13 +289,6 @@ class Test_has_letter:
         assert sw.has_letter('b')
         assert sw.has_letter('c')
 
-    def test_should_raise_error_if_try_to_search_invalid_character(self):
-        with pytest.raises(InvalidLetter):
-            og_word = 'abc def hij'
-            sw = SecretWord(og_word)
-
-            assert sw.has_letter('-')
-
 
 class Test_get_letter_count:
     def test_should_return_0_if_letter_is_not_found(self, secret_word):
@@ -307,7 +300,3 @@ class Test_get_letter_count:
         count = secret_word.get_letter_count('a')
 
         assert count == 2
-
-    def test_should_raise_error_if_using_invalid_character(self, secret_word):
-        with pytest.raises(InvalidLetter):
-            secret_word.get_letter_count('@')

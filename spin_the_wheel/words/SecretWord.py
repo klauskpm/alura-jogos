@@ -13,6 +13,7 @@ absolute_path = os.path.dirname(os.path.abspath(__file__))
 class SecretWord:
     __PLACEHOLDER_LETTER = '_'
     __VALID_LETTERS_PATTERN = '[a-zA-Z0-9]'
+    __VALID_VOWELS_PATTERN = '[aeiouAEIOU]'
     __DEFAULT_FILE_PATH = f'{absolute_path}/assets/video_games.txt'
 
     def __init__(self, word: str = None):
@@ -80,14 +81,31 @@ class SecretWord:
     def get_hidden_word(self):
         return self._hidden_word
 
-    def guess_letter(self, letter: str):
+    def reveal_vowel(self, letter: str):
         letter = SecretWord._normalize_letter(letter)
-        if self.was_guessed:
-            raise NothingLeftToGuess('Não tem mais nada para ser adivinhado')
 
-        has_guessed_letter_before = letter in self._previously_guessed_letters
-        if has_guessed_letter_before:
-            raise HasGuessedLetterBefore(f'A letra \'{letter}\' já foi chutada anteriormente')
+        is_vowel = bool(match(SecretWord.__VALID_VOWELS_PATTERN, letter))
+        if not is_vowel:
+            raise InvalidLetter('Você deveria chutar uma vogal')
+
+        return self.reveal_letter(letter)
+
+    def reveal_consonant_or_number(self, letter: str):
+        letter = SecretWord._normalize_letter(letter)
+
+        is_vowel = bool(match(SecretWord.__VALID_VOWELS_PATTERN, letter))
+        if is_vowel:
+            raise InvalidLetter('Você deveria chutar uma consoante ou número')
+
+        return self.reveal_letter(letter)
+
+    def reveal_letter(self, letter: str):
+        letter = SecretWord._normalize_letter(letter)
+
+        self._check_if_word_was_guessed()
+        self._check_if_letter_is_valid(letter)
+        self._check_if_letter_was_guessed_before(letter)
+
         self._previously_guessed_letters.append(letter)
 
         if not self.has_letter(letter):
@@ -102,18 +120,27 @@ class SecretWord:
 
         return True
 
-    def has_letter(self, letter: str):
-        letter = SecretWord._normalize_letter(letter)
+    def _check_if_letter_was_guessed_before(self, letter):
+        has_guessed_letter_before = letter in self._previously_guessed_letters
+        if has_guessed_letter_before:
+            raise HasGuessedLetterBefore(f'A letra \'{letter}\' já foi chutada anteriormente')
+
+    def _check_if_letter_is_valid(self, letter):
         if not self._is_letter_valid(letter):
             raise InvalidLetter(f'\'{letter}\' não é uma letra válida')
+
+    def _check_if_word_was_guessed(self):
+        if self.was_guessed:
+            raise NothingLeftToGuess('Não tem mais nada para ser adivinhado')
+
+    def has_letter(self, letter: str):
+        letter = SecretWord._normalize_letter(letter)
 
         return letter in self._letter_positions_dict
 
     def get_letter_count(self, letter: str):
         letter = self._normalize_letter(letter)
-        if not self.has_letter(letter):
-            return 0
 
-        indexes = self._letter_positions_dict[letter]
+        indexes = self._letter_positions_dict.get(letter, [])
         return len(indexes)
 

@@ -30,7 +30,7 @@ class RoundCLI:
 
     @staticmethod
     def input_guess():
-        guess = input("Chute uma letra ou número: ")
+        guess = input("Chute uma consoante ou número: ")
         guess = normalize(guess)
 
         return guess

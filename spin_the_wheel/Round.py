@@ -9,6 +9,9 @@ from helpers import sleep
 
 
 class Round:
+    __GUESS_TYPE_WHEEL = 'wheel'
+    __GUESS_TYPE_BUY = 'buy'
+
     def __init__(self, secret_word: SecretWord, players: Tuple[Player, ...] = None):
         self._set_players(players)
         self._set_wheel()
@@ -34,7 +37,7 @@ class Round:
     def _set_menu(self):
         self._menu = Menu('Escolha uma das opções:', {
             '1': {
-                'description': 'Rodar a roda',
+                'description': 'Rodar a roda (chutar uma consoante)',
                 'action': self._spin_the_wheel
             }
         })
@@ -61,33 +64,43 @@ class Round:
 
     def _spin_the_wheel(self):
         self._letter_value = self._wheel.spin()
-        self._try_to_guess()
+        self._try_to_guess(Round.__GUESS_TYPE_WHEEL)
 
-    def _try_to_guess(self):
+    def _try_to_guess(self, guess_type):
         self._print_turn_start_message()
         RoundCLI.print_letter_value_message(self._letter_value)
         try:
             guess = RoundCLI.input_guess()
-            has_guessed_letter = self._check_guess(guess)
+            has_guessed_letter = self._check_guess(guess, guess_type)
             self._check_round(has_guessed_letter)
         except (InvalidLetter, HasGuessedLetterBefore) as error_message:
             print(error_message)
             sleep(1.5)
-            self._try_to_guess()
+            self._try_to_guess(guess_type)
         except NothingLeftToGuess as error_message:
             print(error_message)
             sleep(1.5)
 
-    def _check_guess(self, guess):
+    def _check_guess(self, guess, guess_type):
         print(f"Você chutou '{guess}'")
         letter_count = self._secret_word.get_letter_count(guess)
-        has_guessed_letter = self._secret_word.guess_letter(guess)
+        has_guessed_letter = self._reveal_letter(guess, guess_type)
 
         if has_guessed_letter:
             earned_money = self._letter_value * letter_count
             self._current_player.add_money(earned_money)
 
             RoundCLI.print_guessed_correctly_message(letter_count, guess, earned_money)
+
+        return has_guessed_letter
+
+    def _reveal_letter(self, guess, guess_type):
+        if guess_type == Round.__GUESS_TYPE_WHEEL:
+            has_guessed_letter = self._secret_word.reveal_consonant_or_number(guess)
+        elif guess_type == Round.__GUESS_TYPE_BUY:
+            has_guessed_letter = self._secret_word.reveal_vowel(guess)
+        else:
+            has_guessed_letter = False
 
         return has_guessed_letter
 
