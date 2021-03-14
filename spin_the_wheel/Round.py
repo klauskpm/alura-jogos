@@ -45,7 +45,9 @@ class Round:
     def _run_turn(self):
         self._print_turn_start_message()
         self._input_options_menu()
-        self._run_second_part_of_turn()
+
+    def _print_turn_start_message(self):
+        RoundCLI.print_start_message(self._secret_word, self._current_player)
 
     def _input_options_menu(self):
         try:
@@ -57,7 +59,11 @@ class Round:
             self._run_turn()
             return
 
-    def _run_second_part_of_turn(self):
+    def _spin_the_wheel(self):
+        self._letter_value = self._wheel.spin()
+        self._try_to_guess()
+
+    def _try_to_guess(self):
         self._print_turn_start_message()
         RoundCLI.print_letter_value_message(self._letter_value)
         try:
@@ -67,19 +73,10 @@ class Round:
         except (InvalidLetter, HasGuessedLetterBefore) as error_message:
             print(error_message)
             sleep(1.5)
-            self._rerun_turn()
+            self._try_to_guess()
         except NothingLeftToGuess as error_message:
             print(error_message)
             sleep(1.5)
-
-    def _rerun_turn(self):
-        self._run_second_part_of_turn()
-
-    def _print_turn_start_message(self):
-        RoundCLI.print_start_message(self._secret_word, self._current_player)
-
-    def _spin_the_wheel(self):
-        self._letter_value = self._wheel.spin()
 
     def _check_guess(self, guess):
         print(f"Você chutou '{guess}'")
