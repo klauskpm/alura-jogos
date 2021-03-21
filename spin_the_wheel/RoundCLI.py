@@ -16,11 +16,15 @@ class RoundCLI:
         print()
 
         if len(guessed_letters) > 0:
-            print('Letras que já foram chutadas:')
-            print(f'[ {", ".join(guessed_letters)} ]')
-            print()
+            RoundCLI.print_guessed_letters(guessed_letters)
 
         print(f"Turno: {current_player.name} | R${current_player.money:.2f}")
+        print()
+
+    @staticmethod
+    def print_guessed_letters(guessed_letters):
+        print('Letras que já foram chutadas:')
+        print(f'[ {", ".join(sorted(guessed_letters))} ]')
         print()
 
     @staticmethod
