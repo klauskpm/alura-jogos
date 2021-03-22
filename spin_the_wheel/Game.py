@@ -1,3 +1,4 @@
+from random import randrange
 from time import sleep
 
 from player import InputPlayerScene
@@ -16,11 +17,16 @@ class Game:
     def start(self):
         self._print_opening_message()
 
-        secret_world = SecretWord('klaus')
+        theme = self.draw_theme()
+        secret_world = SecretWord(theme=theme)
         players = InputPlayerScene.input_players()
-        Round(secret_world, players).run()
+        Round(secret_world, theme, players).run()
 
         self._end_game(players)
+
+    def draw_theme(self):
+        themes = ['fruits', 'video_games']
+        return themes[randrange(0, len(themes))]
 
     def _end_game(self, players):
         clear()

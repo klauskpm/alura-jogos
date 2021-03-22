@@ -12,10 +12,11 @@ class Round:
     __GUESS_TYPE_WHEEL = 'wheel'
     __GUESS_TYPE_BUY = 'buy'
 
-    def __init__(self, secret_word: SecretWord, players: Tuple[Player, ...] = None):
+    def __init__(self, secret_word: SecretWord, theme: str, players: Tuple[Player, ...] = None):
+        self._set_secret_word(secret_word)
+        self._theme = theme
         self._set_players(players)
         self._set_wheel()
-        self._set_secret_word(secret_word)
         self._set_menu()
 
     def _set_players(self, players):
@@ -50,7 +51,7 @@ class Round:
         self._input_options_menu()
 
     def _print_turn_start_message(self):
-        RoundCLI.print_start_message(self._secret_word, self._current_player)
+        RoundCLI.print_start_message(self._secret_word, self._theme, self._current_player)
 
     def _input_options_menu(self):
         try:

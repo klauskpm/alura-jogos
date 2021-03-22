@@ -1,7 +1,7 @@
 import pytest
 from random import seed
 
-from spin_the_wheel.words import SecretWord, InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
+from spin_the_wheel.words import SecretWord, InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess, RequiredField
 
 
 @pytest.fixture(scope='module')
@@ -11,12 +11,12 @@ def path_to_words():
 
 @pytest.fixture()
 def secret_word():
-    return SecretWord('Sabão em pó')
+    return SecretWord(word='Sabão em pó')
 
 
 class Test___init__:
     def test_should_use_the_passed_word_as_the_secret_word(self):
-        sw = SecretWord('Sabão em pó')
+        sw = SecretWord(word='Sabão em pó')
 
         assert sw.get_word() == 'SABÃO EM PÓ'
         assert sw.get_hidden_word().count('_') == 9
@@ -26,9 +26,9 @@ class Test___init__:
         assert len(sw._previously_guessed_letters) == 0
         assert not sw.was_guessed
 
-    def test_should_get_random_word_if_none_is_passed(self):
+    def test_should_get_random_word_if_a_theme_is_passed(self):
         seed(3)
-        sw = SecretWord()
+        sw = SecretWord('video_games')
 
         assert sw.get_word() == 'ASTRO BOT'
         assert sw.get_hidden_word().count('_') == 8
@@ -39,18 +39,25 @@ class Test___init__:
         assert len(sw._previously_guessed_letters) == 0
         assert not sw.was_guessed
 
+    def test_should_raise_error_if_no_theme_or_word_is_passed(self):
+        with pytest.raises(RequiredField):
+            SecretWord()
+
 
 class Test__get_random_secret_word:
-    def test_should_use_default_file_if_none_is_passed(self):
-        seed(3)
-        word = SecretWord._get_random_secret_word()
-        assert word == 'Astro Bot'
+    def test_should_raise_error_if_no_word_or_theme_is_passed(self):
+        with pytest.raises(TypeError):
+            SecretWord._get_random_secret_word()
 
-    def test_should_get_random_word_from_selected_file(self, path_to_words):
-        file = f'{path_to_words}/fruits.txt'
+    def test_should_get_random_word_from_theme(self):
+        theme = 'fruits'
         seed(3)
-        word = SecretWord._get_random_secret_word(file)
+        word = SecretWord._get_random_secret_word(theme)
         assert word == 'banana'
+
+    def test_should_throw_error_if_the_theme_doesnt_exists(self):
+        with pytest.raises(FileNotFoundError):
+            SecretWord._get_random_secret_word('a9s7d9a87sd9')
 
 
 class Test__is_letter_valid:
@@ -102,7 +109,7 @@ class Test__normalize_letter:
 
 class Test__map_positions:
     def test_should_only_map_valid_letters(self):
-        sw = SecretWord('Spider-Man 3: Venom')
+        sw = SecretWord(word='Spider-Man 3: Venom')
         mapped_positions = sw._map_positions()
 
         assert len(mapped_positions['E']) == 2
@@ -112,8 +119,8 @@ class Test__map_positions:
         assert len(mapped_positions['-']) == 0
         assert len(mapped_positions[':']) == 0
 
-    def test_should_map_letters_with_and_without_accentuation_as_the_same(self):
-        sw = SecretWord('Sabão em pó')
+    def test_should_map_letters_with_and_without_accentuation_as_the_same(self, secret_word):
+        sw = secret_word
         mapped_positions = sw._map_positions()
 
         print('space', mapped_positions)
@@ -126,13 +133,13 @@ class Test__map_positions:
 
 class Test__create_hidden_word:
     def test_should_return_the_word_as_a_list_with_valid_letters_replaced(self):
-        sw = SecretWord('Spider-Man 3: Venom')
+        sw = SecretWord(word='Spider-Man 3: Venom')
         hidden_word = sw._create_hidden_word()
 
         assert ' '.join(hidden_word) == '_ _ _ _ _ _ - _ _ _   _ :   _ _ _ _ _'
 
-    def test_should_replace_letters_with_accentuation(self):
-        sw = SecretWord('Sabão em pó')
+    def test_should_replace_letters_with_accentuation(self, secret_word):
+        sw = secret_word
         hidden_word = sw._create_hidden_word()
 
         assert ' '.join(hidden_word) == '_ _ _ _ _   _ _   _ _'
@@ -141,14 +148,14 @@ class Test__create_hidden_word:
 class Test_get_word:
     def test_should_return_a_upper_cased_and_stripped_word(self):
         og_word = ' la casa de papel '
-        sw = SecretWord(og_word)
+        sw = SecretWord(word=og_word)
         word = sw.get_word()
 
         assert word == og_word.upper().strip()
 
     def test_should_return_the_value_set_for__secret_word(self):
         og_word = 'just a test'
-        sw = SecretWord('a')
+        sw = SecretWord(word='a')
         sw._secret_word = 'just a test'
         word = sw.get_word()
 
@@ -158,14 +165,14 @@ class Test_get_word:
 class Test_get_hidden_word:
     def test_should_return_the_word_as_a_list_with_valid_letters_replaced(self):
         og_word = 'Spider-Man 3: Venom'
-        sw = SecretWord(og_word)
+        sw = SecretWord(word=og_word)
         hidden_word = sw.get_hidden_word()
 
         assert ' '.join(hidden_word) == '_ _ _ _ _ _ - _ _ _   _ :   _ _ _ _ _'
 
     def test_should_return_the_value_set_for__hidden_word(self):
         og_word = 'just a test'
-        sw = SecretWord('a')
+        sw = SecretWord(word='a')
         sw._hidden_word = 'just a test'
         word = sw.get_hidden_word()
 
@@ -267,7 +274,7 @@ class Test_reveal_letter:
 class Test_has_letter:
     def test_should_return_true_if_has_letter(self):
         og_word = 'abc def hij'
-        sw = SecretWord(og_word)
+        sw = SecretWord(word=og_word)
 
         assert sw.has_letter('A')
         assert sw.has_letter('B')
@@ -275,7 +282,7 @@ class Test_has_letter:
 
     def test_should_return_false_if_doesnt_have_letter(self):
         og_word = 'abc def hij'
-        sw = SecretWord(og_word)
+        sw = SecretWord(word=og_word)
 
         assert not sw.has_letter('K')
         assert not sw.has_letter('R')
@@ -283,7 +290,7 @@ class Test_has_letter:
 
     def test_should_not_care_about_case_sensitive(self):
         og_word = 'abc def hij'
-        sw = SecretWord(og_word)
+        sw = SecretWord(word=og_word)
 
         assert sw.has_letter('a')
         assert sw.has_letter('b')

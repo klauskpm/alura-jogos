@@ -6,12 +6,13 @@ from words import SecretWord
 
 class RoundCLI:
     @staticmethod
-    def print_start_message(secret_word: SecretWord, current_player: Player):
+    def print_start_message(secret_word: SecretWord, theme: str, current_player: Player):
         hidden_word = secret_word.get_hidden_word()
         guessed_letters = secret_word.previously_guessed_letters
+        theme = theme.replace('_', ' ').strip().title()
 
         clear()
-        print('A palavra secreta é:')
+        print(f'Tema: {theme}')
         print(' '.join(hidden_word))
         print()
 

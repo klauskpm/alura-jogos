@@ -4,7 +4,7 @@ from re import match
 from collections import defaultdict
 import unidecode
 
-from .exceptions import InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
+from .exceptions import InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess, RequiredField
 
 # Look for your absolute directory path
 absolute_path = os.path.dirname(os.path.abspath(__file__))
@@ -14,11 +14,13 @@ class SecretWord:
     __PLACEHOLDER_LETTER = '_'
     __VALID_LETTERS_PATTERN = '[a-zA-Z0-9]'
     __VALID_VOWELS_PATTERN = '[aeiouAEIOU]'
-    __DEFAULT_FILE_PATH = f'{absolute_path}/assets/video_games.txt'
 
-    def __init__(self, word: str = None):
+    def __init__(self, theme: str = None, word: str = None):
+        if not word and not theme:
+            raise RequiredField('Você deve passa um tema ou uma palavra')
+
         if not word:
-            word = SecretWord._get_random_secret_word()
+            word = SecretWord._get_random_secret_word(theme)
 
         self._secret_word = word.strip().upper()
         self._hidden_word = self._create_hidden_word()
@@ -31,9 +33,8 @@ class SecretWord:
         return self._previously_guessed_letters
 
     @staticmethod
-    def _get_random_secret_word(file_path=None):
-        if not file_path:
-            file_path = SecretWord.__DEFAULT_FILE_PATH
+    def _get_random_secret_word(theme):
+        file_path = f'{absolute_path}/assets/{theme}.txt'
 
         with open(file_path, 'r', encoding='utf-8') as file:
             words = [line for line in file]
@@ -143,4 +144,3 @@ class SecretWord:
 
         indexes = self._letter_positions_dict.get(letter, [])
         return len(indexes)
-

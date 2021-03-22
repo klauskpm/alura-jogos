@@ -8,3 +8,7 @@ class HasGuessedLetterBefore(Exception):
 
 class NothingLeftToGuess(Exception):
     pass
+
+
+class RequiredField(Exception):
+    pass
