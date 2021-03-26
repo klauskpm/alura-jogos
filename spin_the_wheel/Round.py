@@ -89,7 +89,7 @@ class Round:
             RoundCLI.print_letter_value_message(self._letter_value)
 
         try:
-            guess = RoundCLI.input_guess()
+            guess = self._input_guess(guess_type)
             has_guessed_letter = self._check_guess(guess, guess_type)
             self._check_round(has_guessed_letter)
         except (InvalidLetter, HasGuessedLetterBefore) as error_message:
@@ -124,6 +124,16 @@ class Round:
             has_guessed_letter = False
 
         return has_guessed_letter
+
+    def _input_guess(self, guess_type):
+        guess = ''
+
+        if guess_type == Round.__GUESS_TYPE_WHEEL:
+            guess = RoundCLI.input_consonant_or_number_guess()
+        elif guess_type == Round.__GUESS_TYPE_BUY:
+            guess = RoundCLI.input_vowel_guess()
+
+        return guess
 
     def _check_round(self, has_guessed_letter):
         if self._secret_word.was_guessed:

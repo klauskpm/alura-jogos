@@ -34,8 +34,15 @@ class RoundCLI:
         print()
 
     @staticmethod
-    def input_guess():
+    def input_consonant_or_number_guess():
         guess = input("Chute uma consoante ou número: ")
+        guess = normalize(guess)
+
+        return guess
+
+    @staticmethod
+    def input_vowel_guess():
+        guess = input("Chute uma vogal: ")
         guess = normalize(guess)
 
         return guess
