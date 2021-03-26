@@ -41,9 +41,12 @@ class RoundCLI:
         return guess
 
     @staticmethod
-    def print_guessed_correctly_message(letter_count, guess, earned_money):
+    def print_guessed_correctly_message(letter_count, guess):
         print(f"Tem {letter_count} letras '{guess}'")
         sleep(0.5)
+
+    @staticmethod
+    def print_earned_money_message(earned_money):
         print(f"Você ganhou R${earned_money:.2f}")
         sleep(0.5)
 

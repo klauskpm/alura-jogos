@@ -84,7 +84,10 @@ class Round:
 
     def _try_to_guess(self, guess_type):
         self._print_turn_start_message()
-        RoundCLI.print_letter_value_message(self._letter_value)
+
+        if guess_type == Round.__GUESS_TYPE_WHEEL:
+            RoundCLI.print_letter_value_message(self._letter_value)
+
         try:
             guess = RoundCLI.input_guess()
             has_guessed_letter = self._check_guess(guess, guess_type)
@@ -103,10 +106,12 @@ class Round:
         has_guessed_letter = self._reveal_letter(guess, guess_type)
 
         if has_guessed_letter:
-            earned_money = self._letter_value * letter_count
-            self._current_player.add_money(earned_money)
+            RoundCLI.print_guessed_correctly_message(letter_count, guess)
 
-            RoundCLI.print_guessed_correctly_message(letter_count, guess, earned_money)
+            if guess_type == Round.__GUESS_TYPE_WHEEL:
+                earned_money = self._letter_value * letter_count
+                self._current_player.add_money(earned_money)
+                RoundCLI.print_earned_money_message(earned_money)
 
         return has_guessed_letter
 
