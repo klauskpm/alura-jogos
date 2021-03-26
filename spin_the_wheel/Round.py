@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from player import Player
+from player import Player, InvalidAmount
 from RoundCLI import RoundCLI
 from menu import Menu, InvalidMenuOption
 from words import SecretWord, InvalidLetter, HasGuessedLetterBefore, NothingLeftToGuess
@@ -11,6 +11,8 @@ from helpers import sleep
 class Round:
     __GUESS_TYPE_WHEEL = 'wheel'
     __GUESS_TYPE_BUY = 'buy'
+
+    __VOWEL_COST = 200
 
     def __init__(self, secret_word: SecretWord, theme: str, players: Tuple[Player, ...] = None):
         self._set_secret_word(secret_word)
@@ -40,6 +42,10 @@ class Round:
             '1': {
                 'description': 'Rodar a roda (chutar uma consoante)',
                 'action': self._spin_the_wheel
+            },
+            '2': {
+                'description': f'Comprar vogál por R${Round.__VOWEL_COST:.2f}',
+                'action': self._buy_vowel
             }
         })
 
@@ -66,6 +72,15 @@ class Round:
     def _spin_the_wheel(self):
         self._letter_value = self._wheel.spin()
         self._try_to_guess(Round.__GUESS_TYPE_WHEEL)
+
+    def _buy_vowel(self):
+        try:
+            self._current_player.takes_money(Round.__VOWEL_COST)
+            self._try_to_guess(Round.__GUESS_TYPE_BUY)
+        except InvalidAmount:
+            print(f'Você não tem dinheiro suficiente para comprar uma vogal')
+            sleep(1)
+            self._run_turn()
 
     def _try_to_guess(self, guess_type):
         self._print_turn_start_message()
