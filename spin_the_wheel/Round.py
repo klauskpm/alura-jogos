@@ -79,7 +79,7 @@ class Round:
             self._try_to_guess(Round.__GUESS_TYPE_BUY)
         except InvalidAmount:
             print(f'Você não tem dinheiro suficiente para comprar uma vogal')
-            sleep(1)
+            sleep(2)
             self._run_turn()
 
     def _try_to_guess(self, guess_type):
