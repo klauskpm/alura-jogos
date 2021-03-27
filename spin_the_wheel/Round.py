@@ -46,6 +46,10 @@ class Round:
             '2': {
                 'description': f'Comprar vogál por R${Round.__VOWEL_COST:.2f}',
                 'action': self._buy_vowel
+            },
+            '3': {
+                'description': 'Advinhe a palavra',
+                'action': self._guess_word
             }
         })
 
@@ -81,6 +85,9 @@ class Round:
             print(f'Você não tem dinheiro suficiente para comprar uma vogal')
             sleep(2)
             self._run_turn()
+
+    def _guess_word(self):
+        pass
 
     def _try_to_guess(self, guess_type):
         self._print_turn_start_message()
