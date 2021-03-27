@@ -54,7 +54,11 @@ class SecretWord:
         if is_word:
             letter = letter[0]
 
-        return unidecode.unidecode(letter).upper()
+        return SecretWord._normalize_word(letter)
+
+    @staticmethod
+    def _normalize_word(word: str):
+        return unidecode.unidecode(word).strip().upper()
 
     def _map_positions(self):
         positions_dict = defaultdict(list)
@@ -144,3 +148,11 @@ class SecretWord:
 
         indexes = self._letter_positions_dict.get(letter, [])
         return len(indexes)
+
+    def check_word(self, word):
+        secret_word = SecretWord._normalize_word(self.get_word())
+        word = SecretWord._normalize_word(word)
+
+        self.was_guessed = secret_word == word
+
+        return self.was_guessed

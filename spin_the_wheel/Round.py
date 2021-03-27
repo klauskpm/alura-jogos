@@ -13,6 +13,7 @@ class Round:
     __GUESS_TYPE_BUY = 'buy'
 
     __VOWEL_COST = 200
+    __WORD_VALUE = 500
 
     def __init__(self, secret_word: SecretWord, theme: str, players: Tuple[Player, ...] = None):
         self._set_secret_word(secret_word)
@@ -87,7 +88,16 @@ class Round:
             self._run_turn()
 
     def _guess_word(self):
-        pass
+        guess = input('Qual é a palavra? ')
+        has_guessed_word = self._secret_word.check_word(guess)
+
+        if has_guessed_word:
+            print('Você acertou a palavra!')
+            sleep(1)
+            print(f'E por isso ganhou R${Round.__WORD_VALUE:.2f}')
+            self._current_player.add_money(Round.__WORD_VALUE)
+
+        self._check_round(has_guessed_word)
 
     def _try_to_guess(self, guess_type):
         self._print_turn_start_message()
