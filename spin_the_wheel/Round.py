@@ -92,12 +92,15 @@ class Round:
         guess = input('Qual é a palavra? ')
         has_guessed_word = self._secret_word.check_word(guess)
 
+        self._print_turn_start_message()
+        sleep(1)
+
         if has_guessed_word:
-            print('Você acertou a palavra!')
-            sleep(.5)
-            print(f'E por isso ganhou R${Round.__WORD_VALUE:.2f}')
-            sleep(2)
             self._current_player.add_money(Round.__WORD_VALUE)
+            print(f'Você chutou {self._secret_word.get_word()} e acertou!')
+            sleep(2)
+            print(f'Você ganhou R${Round.__WORD_VALUE:.2f}')
+            sleep(2)
 
         self._check_round(has_guessed_word)
 
