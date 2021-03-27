@@ -153,6 +153,11 @@ class SecretWord:
         secret_word = SecretWord._normalize_word(self.get_word())
         word = SecretWord._normalize_word(word)
 
-        self.was_guessed = secret_word == word
+        was_guessed = secret_word == word
 
-        return self.was_guessed
+        if was_guessed:
+            letters = list(self._letter_positions_dict.keys())
+            for letter in letters:
+                self.reveal_letter(letter)
+
+        return was_guessed

@@ -94,8 +94,9 @@ class Round:
 
         if has_guessed_word:
             print('Você acertou a palavra!')
-            sleep(1)
+            sleep(.5)
             print(f'E por isso ganhou R${Round.__WORD_VALUE:.2f}')
+            sleep(2)
             self._current_player.add_money(Round.__WORD_VALUE)
 
         self._check_round(has_guessed_word)
