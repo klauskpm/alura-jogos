@@ -88,6 +88,7 @@ class Round:
             self._run_turn()
 
     def _guess_word(self):
+        self._print_turn_start_message()
         guess = input('Qual é a palavra? ')
         has_guessed_word = self._secret_word.check_word(guess)
 
