@@ -32,7 +32,7 @@ class Game:
         current_round = 1
         while current_round <= number_of_rounds:
             theme = self._draw_theme()
-            secret_world = SecretWord(theme=theme, word='klaus')
+            secret_world = SecretWord(theme=theme)
             Round(secret_world, theme, players).run()
             current_round += 1
 
